@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "noExclusiveEnchantments",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "No Exclusive Enchantments",
+  "description": "A minecraft fabric mod that allows certain enchantments that normally would not be allowed together to be put on the same tool/armor piece.",
   "authors": [
-    "Me!"
+    "kpzip"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "",
+    "sources": "https://github.com/kpzip/noExclusiveEnchantments/tree/1.19.1"
   },
 
   "license": "CC0-1.0",
@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "xyz.kpzip.noExclusiveEnchantments.NoExclusiveEnchantments"
     ]
   },
   "mixins": [
