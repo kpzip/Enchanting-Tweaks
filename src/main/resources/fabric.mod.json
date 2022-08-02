@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "id": "noExclusiveEnchantments",
-  "version": "${version}",
+  "id": "noexclusiveenchantments",
+  "version": "1.0.0",
 
   "name": "No Exclusive Enchantments",
   "description": "A minecraft fabric mod that allows certain enchantments that normally would not be allowed together to be put on the same tool/armor piece.",
