@@ -1,4 +1,4 @@
-package xyz.kpzip.noExclusiveEnchantments.mixins;
+package xyz.kpzip.enchantingtweaks.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

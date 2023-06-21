@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "betterenchanting",
+  "id": "enchantingtweaks",
   "version": "1.0.0",
 
-  "name": "No Exclusive Enchantments",
-  "description": "A minecraft fabric mod that allows certain enchantments that normally would not be allowed together to be put on the same tool/armor piece.",
+  "name": "Enchanting Tweaks",
+  "description": "Various tweaks, improvements and QOL changes to the minecraft enchanting system.",
   "authors": [
     "kpzip"
   ],
@@ -14,16 +14,16 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/enchantingtweaks/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "xyz.kpzip.betterenchanting.BetterEnchanting"
+      "xyz.kpzip.enchantingtweaks.EnchantingTweaks"
     ]
   },
   "mixins": [
-    "betterenchanting.mixins.json"
+    "enchantingtweaks.mixins.json"
   ],
 
   "depends": {

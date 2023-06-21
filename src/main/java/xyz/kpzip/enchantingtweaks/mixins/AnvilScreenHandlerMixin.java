@@ -1,4 +1,4 @@
-package xyz.kpzip.noExclusiveEnchantments.mixins;
+package xyz.kpzip.enchantingtweaks.mixins;
 
 import java.util.Map;
 
