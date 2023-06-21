@@ -23,7 +23,9 @@
     ]
   },
   "mixins": [
-    "enchantingtweaks.mixins.json"
+    "enchantingtweaks.mixins.json",
+    "omega-config.mixins.json",
+    "omega-config-gui.mixins.json"
   ],
 
   "depends": {
@@ -33,5 +35,6 @@
     "java": ">=17"
   },
   "suggests": {
+  	"modmenu": "7.1.0"
   }
 }

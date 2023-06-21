@@ -48,7 +48,6 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
             }
             if (text != null) {
                 int k = this.backgroundWidth - 8 - this.textRenderer.getWidth(text) - 2;
-                //int l = 69;
                 context.fill(k - 2, 67, this.backgroundWidth - 8, 79, 0x4F000000);
                 context.drawTextWithShadow(this.textRenderer, text, k, 69, j);
             }
