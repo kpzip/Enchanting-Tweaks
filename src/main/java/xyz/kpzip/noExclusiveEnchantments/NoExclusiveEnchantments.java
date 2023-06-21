@@ -9,10 +9,13 @@ public class NoExclusiveEnchantments implements ModInitializer {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger("noexclusiveenchantments");
 
+	public static final String MOD_ID = "noexclusiveenchantments";
+	public static final String MOD_VERSION = "1.0.0";
+	
+	
+	
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+		
 	}
 }
