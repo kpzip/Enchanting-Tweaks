@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "noexclusiveenchantments",
+  "id": "betterenchanting",
   "version": "1.0.0",
 
   "name": "No Exclusive Enchantments",
@@ -10,7 +10,7 @@
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/kpzip/noExclusiveEnchantments/tree/1.19.1"
+    "sources": "https://github.com/kpzip/Better-Enchanting"
   },
 
   "license": "CC0-1.0",
@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "xyz.kpzip.noExclusiveEnchantments.NoExclusiveEnchantments"
+      "xyz.kpzip.betterenchanting.BetterEnchanting"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "betterenchanting.mixins.json"
   ],
 
   "depends": {
