@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -41,13 +41,6 @@ dependencies {
 
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 	
-	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-	
-	include "me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6"
-    modApi ("me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6") {
-        exclude group: "net.fabricmc.fabric-api"
-    }
 }
 
 processResources {

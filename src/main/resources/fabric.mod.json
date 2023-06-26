@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "enchantingtweaks",
-  "version": "1.0.0",
+  "version": "${version}",
 
   "name": "Enchanting Tweaks",
   "description": "Various tweaks, improvements and QOL changes to the minecraft enchanting system.",
@@ -23,9 +23,7 @@
     ]
   },
   "mixins": [
-    "enchantingtweaks.mixins.json",
-    "omega-config.mixins.json",
-    "omega-config-gui.mixins.json"
+    "enchantingtweaks.mixins.json"
   ],
 
   "depends": {
