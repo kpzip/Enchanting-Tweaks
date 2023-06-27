@@ -55,5 +55,22 @@ public class EnchantingTweaksConfig implements Config {
 	public void writeToPacket(PacketByteBuf buf) {
 		buf.writeByte(this.toByte());
 	}
+	
+	public boolean allowBypassAnvilMaxLevel() {
+		return bypassAnvilMaxLevel;
+	}
+
+	public boolean allowBowEnchantmentsTogether() {
+		return allowBowEnchantmentsTogether;
+	}
+
+	public boolean allowDamageEnchantmentsTogether() {
+		return allowDamageEnchantmentsTogether;
+	}
+
+	public boolean allowProtectionEnchantmentsTogether() {
+		return allowProtectionEnchantmentsTogether;
+	}
+
 
 }
