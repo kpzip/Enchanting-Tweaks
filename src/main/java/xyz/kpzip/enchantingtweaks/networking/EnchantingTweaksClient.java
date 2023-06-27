@@ -16,9 +16,7 @@ public class EnchantingTweaksClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(NetworkingConstants.ETCFG_PACKET_ID, (client, handler, buf, responseSender) -> {
 			buf.retain();
 			client.execute(() -> {
-				EnchantingTweaks.LOGGER.info("loading config from packet...");
 				((Cfgstorrer)client).getEtcfg().loadFromPacket(buf);
-				EnchantingTweaks.LOGGER.info("config synced to client.");
 			});
 		});
 	}
