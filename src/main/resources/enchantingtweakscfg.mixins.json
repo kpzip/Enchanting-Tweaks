@@ -4,12 +4,9 @@
   "package": "xyz.kpzip.enchantingtweaks.config.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  	"MixinMinecraftServer",
   	"MixinPlayerManager"
   ],
-  "client": [
-  	"MixinMinecraftClient"
-  ],
+  "client": [],
   "server": [],
   "injectors": {
     "defaultRequire": 1

@@ -9,9 +9,10 @@ import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 @Mixin(DamageEnchantment.class)
-public abstract class DamageEnchantmentMixin extends Enchantment{
+public abstract class DamageEnchantmentMixin extends Enchantment {
 
 	protected DamageEnchantmentMixin(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
 		super(weight, type, slotTypes);
@@ -19,7 +20,7 @@ public abstract class DamageEnchantmentMixin extends Enchantment{
 	
 	@Inject(method = "canAccept", at = @At("HEAD"), cancellable = true)
 	public void canAccept(Enchantment other, CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(super.canAccept(other));
+		if (EnchantingTweaks.CONFIG.allowDamageEnchantmentsTogether()) info.setReturnValue(super.canAccept(other));
 	}
 
 }

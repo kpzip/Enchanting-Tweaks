@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import xyz.kpzip.enchantingtweaks.config.Cfgstorrer;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 @Environment(value=EnvType.CLIENT)
 public class EnchantingTweaksClient implements ClientModInitializer {
@@ -15,7 +15,7 @@ public class EnchantingTweaksClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(NetworkingConstants.ETCFG_PACKET_ID, (client, handler, buf, responseSender) -> {
 			buf.retain();
 			client.execute(() -> {
-				((Cfgstorrer)client).getEtcfg().loadFromPacket(buf);
+				EnchantingTweaks.CONFIG.loadFromPacket(buf);
 			});
 		});
 	}

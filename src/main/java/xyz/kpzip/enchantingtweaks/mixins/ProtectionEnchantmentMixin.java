@@ -9,6 +9,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.EquipmentSlot;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 @Mixin(ProtectionEnchantment.class)
 public abstract class ProtectionEnchantmentMixin extends Enchantment {
@@ -19,7 +20,7 @@ public abstract class ProtectionEnchantmentMixin extends Enchantment {
 
 	@Inject(method = "canAccept", at = @At("HEAD"), cancellable = true)
 	public void canAccept(Enchantment other, CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(super.canAccept(other));
+		if (EnchantingTweaks.CONFIG.allowProtectionEnchantmentsTogether()) info.setReturnValue(super.canAccept(other));
 	}
 
 }

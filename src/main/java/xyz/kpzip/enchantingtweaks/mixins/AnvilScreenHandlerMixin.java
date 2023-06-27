@@ -19,6 +19,7 @@ import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 @Mixin(AnvilScreenHandler.class)
 public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
@@ -162,9 +163,9 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
         if (k == i && k > 0 && this.levelCost.get() >= 40) {
             this.levelCost.set(39);
         }
-        //if (this.levelCost.get() >= 40 && !this.player.getAbilities().creativeMode) {
-        //    itemStack2 = ItemStack.EMPTY;
-        //}
+        if (this.levelCost.get() >= 40 && !this.player.getAbilities().creativeMode && !EnchantingTweaks.CONFIG.allowBypassAnvilMaxLevel()) {
+            itemStack2 = ItemStack.EMPTY;
+        }
         if (!itemStack2.isEmpty()) {
             int t = itemStack2.getRepairCost();
             if (!itemStack3.isEmpty() && t < itemStack3.getRepairCost()) {

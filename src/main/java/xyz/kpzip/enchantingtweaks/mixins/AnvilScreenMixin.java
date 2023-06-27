@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 @Environment(value=EnvType.CLIENT)
 @Mixin(AnvilScreen.class)
@@ -37,10 +38,10 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         if (i > 0) {
             Text text;
             int j = 8453920;
-            //if (i >= 40 && !this.client.player.getAbilities().creativeMode) {
-            //    text = TOO_EXPENSIVE_TEXT;
-            //    j = 0xFF6060;
-            //} else 
+            if (i >= 40 && !this.client.player.getAbilities().creativeMode && !EnchantingTweaks.CONFIG.allowBypassAnvilMaxLevel()) {
+                text = Text.translatable("container.repair.expensive");
+                j = 0xFF6060;
+            } else 
             if (!((AnvilScreenHandler)this.handler).getSlot(2).hasStack()) {
                 text = null;
             } else {
