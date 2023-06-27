@@ -7,10 +7,13 @@
   	"ProtectionEnchantmentMixin",
   	"InfinityEnchantmentMixin",
   	"DamageEnchantmentMixin",
-  	"AnvilScreenHandlerMixin"
+  	"AnvilScreenHandlerMixin",
+  	"MixinMinecraftServer",
+  	"MixinPlayerManager"
   ],
   "client": [
-  	"AnvilScreenMixin"
+  	"AnvilScreenMixin",
+  	"MixinMinecraftClient"
   ],
   "server": [],
   "injectors": {

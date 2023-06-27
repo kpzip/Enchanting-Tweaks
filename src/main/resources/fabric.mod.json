@@ -20,10 +20,14 @@
   "entrypoints": {
     "main": [
       "xyz.kpzip.enchantingtweaks.EnchantingTweaks"
+    ],
+    "client": [
+      "xyz.kpzip.enchantingtweaks.networking.EnchantingTweaksClient"
     ]
   },
   "mixins": [
-    "enchantingtweaks.mixins.json"
+    "enchantingtweaks.mixins.json",
+    "enchantingtweakscfg.mixins.json"
   ],
 
   "depends": {

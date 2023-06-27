@@ -3,7 +3,6 @@ package xyz.kpzip.enchantingtweaks.mixins;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,9 +23,9 @@ import net.minecraft.text.Text;
 @Mixin(AnvilScreenHandler.class)
 public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
 	
-	@Shadow @Final private int repairItemUsage;
-	@Shadow @Final private String newItemName;
-	@Shadow @Final private final Property levelCost = Property.create();
+	@Shadow private int repairItemUsage;
+	@Shadow private String newItemName;
+	@Shadow private final Property levelCost = Property.create();
 	
 	public AnvilScreenHandlerMixin(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
 		super(type, syncId, playerInventory, context);
