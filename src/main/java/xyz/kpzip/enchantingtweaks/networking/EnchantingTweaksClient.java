@@ -9,7 +9,6 @@ import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 @Environment(value=EnvType.CLIENT)
 public class EnchantingTweaksClient implements ClientModInitializer {
 	
-	
 	@Override
 	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(NetworkingConstants.ETCFG_PACKET_ID, (client, handler, buf, responseSender) -> {
@@ -19,6 +18,4 @@ public class EnchantingTweaksClient implements ClientModInitializer {
 			});
 		});
 	}
-
-
 }
