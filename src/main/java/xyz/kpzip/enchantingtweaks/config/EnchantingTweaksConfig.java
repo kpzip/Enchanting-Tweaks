@@ -9,8 +9,8 @@ public class EnchantingTweaksConfig implements Config {
 	public static final String FILE_NAME = "enchanting-tweaks-config";
 	public static final String FILE_EXTENSION = "json";
 	
-	private boolean bypassAnvilMaxLevel = false;
-	private boolean allowBowEnchantmentsTogether = false;
+	private boolean bypassAnvilMaxLevel = true;
+	private boolean allowBowEnchantmentsTogether = true;
 	private boolean allowDamageEnchantmentsTogether = false;
 	private boolean allowProtectionEnchantmentsTogether = false;
 	

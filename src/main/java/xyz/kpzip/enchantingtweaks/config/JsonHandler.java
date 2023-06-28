@@ -15,8 +15,12 @@ import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 public abstract class JsonHandler {
 	
-	public static Path getConfigPath(String name, String ext, String modid) {
-		return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), modid, name + "." + ext);
+	private static Path getConfigPath(String name, String ext, String modid) {
+		return Paths.get(getConfigDirectory(modid).toString(), name + "." + ext);
+	}
+	
+	private static Path getConfigDirectory(String modid) {
+		return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), modid);
 	}
 	
 	public static <T extends Config> T readConfig(Class<T> type, Supplier<T> newconfig, String fileName, String fileType, String modid) {
@@ -36,6 +40,7 @@ public abstract class JsonHandler {
 		} catch (IOException e) {
 			EnchantingTweaks.LOGGER.error("Error opening configuration file");
 			EnchantingTweaks.LOGGER.error(e.getMessage());
+			e.printStackTrace();
 			return newconfig.get();
 		} catch (JsonSyntaxException e) {
 			EnchantingTweaks.LOGGER.error("Error reading configuration file");
