@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
-import xyz.kpzip.enchantingtweaks.config.EnchantingTweaksConfig;
+import xyz.kpzip.enchantingtweaks.config.ConfigHandler;
 import xyz.kpzip.enchantingtweaks.config.JsonHandler;
+import xyz.kpzip.enchantingtweaks.networking.EnchantingTweaksConfig;
 
 public class EnchantingTweaks implements ModInitializer {
 	
@@ -17,6 +18,6 @@ public class EnchantingTweaks implements ModInitializer {
 	
 	@Override
 	public void onInitialize() {
-		
+		ConfigHandler.registerConfig(CONFIG);
 	}
 }

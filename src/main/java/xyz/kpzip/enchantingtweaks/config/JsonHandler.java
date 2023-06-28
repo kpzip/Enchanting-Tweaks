@@ -23,7 +23,7 @@ public abstract class JsonHandler {
 		return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), modid);
 	}
 	
-	public static <T extends Config> T readConfig(Class<T> type, Supplier<T> newconfig, String fileName, String fileType, String modid) {
+	public static <T extends SyncedConfig> T readConfig(Class<T> type, Supplier<T> newconfig, String fileName, String fileType, String modid) {
 		EnchantingTweaks.LOGGER.info("Readig Config...");
 		List<String> file;
 		Gson gson = new Gson();

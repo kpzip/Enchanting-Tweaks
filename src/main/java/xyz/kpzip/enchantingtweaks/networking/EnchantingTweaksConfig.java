@@ -1,10 +1,10 @@
-package xyz.kpzip.enchantingtweaks.config;
+package xyz.kpzip.enchantingtweaks.networking;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import xyz.kpzip.enchantingtweaks.networking.NetworkingConstants;
+import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
 
-public class EnchantingTweaksConfig implements Config {
+public class EnchantingTweaksConfig implements SyncedConfig {
 	
 	public static final String FILE_NAME = "enchanting-tweaks-config";
 	public static final String FILE_EXTENSION = "json";
@@ -76,7 +76,7 @@ public class EnchantingTweaksConfig implements Config {
 	}
 
 	@Override
-	public Identifier getIdentifier() {
+	public Identifier getSyncPacketIdentifier() {
 		return NetworkingConstants.ETCFG_PACKET_ID;
 	}
 

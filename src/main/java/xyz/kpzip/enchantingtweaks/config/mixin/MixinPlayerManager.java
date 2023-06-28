@@ -15,8 +15,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
-import xyz.kpzip.enchantingtweaks.networking.NetworkingConstants;
+import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
+import xyz.kpzip.enchantingtweaks.config.ConfigHandler;
 
 @Mixin(PlayerManager.class)
 public class MixinPlayerManager {
@@ -26,11 +26,13 @@ public class MixinPlayerManager {
 	@Inject(method = "onPlayerConnect", at = @At("RETURN"))
 	public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
 		if (!(server instanceof IntegratedServer)) {
-			PacketByteBuf buf = PacketByteBufs.create();
-			EnchantingTweaks.CONFIG.writeToPacket(buf);
-			ServerPlayNetworking.send(player, NetworkingConstants.ETCFG_PACKET_ID, buf);
+			PacketByteBuf buf;
+			for (SyncedConfig cfg : ConfigHandler.configs) {
+				buf = PacketByteBufs.create();
+				cfg.writeToPacket(buf);
+				ServerPlayNetworking.send(player, cfg.getSyncPacketIdentifier(), buf);
+			}
 		}
-		
 	}
 	
 }
