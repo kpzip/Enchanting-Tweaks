@@ -1,4 +1,4 @@
-package xyz.kpzip.enchantingtweaks.mixins;
+package xyz.kpzip.enchantingtweaks.mixins.enchantment;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,7 @@ public class PiercingEnchantmentMixin extends Enchantment {
 	
 	@Inject(method = "canAccept", at = @At("HEAD"), cancellable = true)
 	public void canAccept(Enchantment other, CallbackInfoReturnable<Boolean> info) {
-		if (EnchantingTweaks.CONFIG.allowCrossbowEnchantmentsTogether())info.setReturnValue(super.canAccept(other));
+		if (EnchantingTweaks.getConfig().allowCrossbowEnchantmentsTogether())info.setReturnValue(super.canAccept(other));
 	}
 
 }

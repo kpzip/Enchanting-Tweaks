@@ -11,6 +11,6 @@ public class EnchantingTweaksClient implements ClientModInitializer {
 	
 	@Override
 	public void onInitializeClient() {
-		ConfigHandler.registerConfigClient(EnchantingTweaks.CONFIG);
+		ConfigHandler.registerConfigClient(EnchantingTweaks.getConfig());
 	}
 }

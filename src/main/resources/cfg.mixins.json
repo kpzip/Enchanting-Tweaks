@@ -1,13 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "xyz.kpzip.enchantingtweaks.mixins",
+  "package": "xyz.kpzip.enchantingtweaks.config.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  	"AnvilScreenHandlerMixin"
+  	"MixinPlayerManager"
   ],
   "client": [
-  	"AnvilScreenMixin"
+  	"MixinMinecraftClient"
   ],
   "server": [],
   "injectors": {

@@ -20,6 +20,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
+import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
 
 @Mixin(AnvilScreenHandler.class)
 public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
@@ -109,8 +110,8 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
                         continue;
                     }
                     bl22 = true;
-                    if (r > enchantment.getMaxLevel()) {
-                        r = enchantment.getMaxLevel();
+                    if (r > EnchantmentLevelHelper.getEnchantmentMaxLevel(enchantment)) {
+                        r = EnchantmentLevelHelper.getEnchantmentMaxLevel(enchantment);
                     }
                     map.put(enchantment, r);
                     int s = 0;
@@ -163,7 +164,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
         if (k == i && k > 0 && this.levelCost.get() >= 40) {
             this.levelCost.set(39);
         }
-        if (this.levelCost.get() >= 40 && !this.player.getAbilities().creativeMode && !EnchantingTweaks.CONFIG.allowBypassAnvilMaxLevel()) {
+        if (this.levelCost.get() >= 40 && !this.player.getAbilities().creativeMode && !EnchantingTweaks.getConfig().allowBypassAnvilMaxLevel()) {
             itemStack2 = ItemStack.EMPTY;
         }
         if (!itemStack2.isEmpty()) {

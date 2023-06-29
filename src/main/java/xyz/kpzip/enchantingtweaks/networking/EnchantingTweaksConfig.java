@@ -1,7 +1,14 @@
 package xyz.kpzip.enchantingtweaks.networking;
 
+import java.util.HashMap;
+
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
+import xyz.kpzip.enchantingtweaks.config.JsonHandler;
 import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
 
 public class EnchantingTweaksConfig implements SyncedConfig {
@@ -15,38 +22,11 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	private boolean allowProtectionEnchantmentsTogether = false;
 	private boolean allowCrossbowEnchantmentsTogether = false;
 	
-	private byte protectionMaxLevel = 4;
-	private byte fire_protectionMaxLevel = 4;
-	private byte feather_fallingMaxLevel = 4;
-	private byte blast_protectionMaxLevel = 4;
-	private byte projectile_protectionMaxLevel = 4;
-	private byte respirationMaxLevel = 3;
-	private byte thornsMaxLevel = 3;
-	private byte depth_striderMaxLevel = 3;
-	private byte frost_walkerMaxLevel = 2;
-	private byte soul_speedMaxLevel = 3;
-	private byte swift_sneakMaxLevel = 3;
-	private byte sharpnessMaxLevel = 5;
-	private byte smiteMaxLevel = 5;
-	private byte bane_of_arthropodsMaxLevel = 5;
-	private byte knockbackMaxLevel = 2;
-	private byte fire_aspectMaxLevel = 2;
-	private byte lootingMaxLevel = 3;
-	private byte sweepingMaxLevel = 3;
-	private byte efficiencyMaxLevel = 5;
-	private byte unbreakingMaxLevel = 3;
-	private byte fortuneMaxLevel = 3;
-	private byte powerMaxLevel = 5;
-	private byte punchMaxLevel = 2;
-	private byte flameMaxLevel = 1;
-	private byte luch_of_the_seaMaxLevel = 3;
-	private byte lureMaxLevel = 3;
-	private byte loyaltyMaxLevel = 3;
-	private byte impalingMaxLevel = 5;
-	private byte riptideMaxLevel = 3;
-	private byte multishotMaxLevel = 1;
-	private byte quick_chargeMaxLevel = 3;
-	private byte piercingMaxLevel = 4;
+	private HashMap<String, Byte> maxLevels = addAllEnchantments(new HashMap<String, Byte>());
+	
+	public EnchantingTweaksConfig() {
+		updateConfig();
+	}
 	
 	//encode boolean values into a single byte for syncing
 	public byte toByte() {
@@ -64,7 +44,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		if (b % 128 > 63) allowBowEnchantmentsTogether = true; else allowBowEnchantmentsTogether = false; //is bit 2 set?
 		if (b % 64 > 31) allowDamageEnchantmentsTogether = true; else allowDamageEnchantmentsTogether = false; //is bit 3 set?
 		if (b % 32 > 15) allowProtectionEnchantmentsTogether = true; else allowProtectionEnchantmentsTogether = false; //is bit 4 set?
-		if (b % 16 > 7) allowCrossbowEnchantmentsTogether = true; else allowCrossbowEnchantmentsTogether = false; //is bit 4 set?
+		if (b % 16 > 7) allowCrossbowEnchantmentsTogether = true; else allowCrossbowEnchantmentsTogether = false; //is bit 5 set?
 	}
 	
 	public String getFileName() {
@@ -91,6 +71,27 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		buf.writeByte(this.toByte());
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public EnchantingTweaksConfig reloadFromFile() {
+		EnchantingTweaksConfig readcfg = JsonHandler.readConfig(EnchantingTweaksConfig.class, EnchantingTweaksConfig::new, FILE_NAME, FILE_EXTENSION, EnchantingTweaks.MOD_ID);
+		this.bypassAnvilMaxLevel = readcfg.allowBypassAnvilMaxLevel();
+		this.allowBowEnchantmentsTogether = readcfg.allowBowEnchantmentsTogether();
+		this.allowDamageEnchantmentsTogether = readcfg.allowDamageEnchantmentsTogether();
+		this.allowProtectionEnchantmentsTogether = readcfg.allowProtectionEnchantmentsTogether();
+		this.allowCrossbowEnchantmentsTogether = readcfg.allowCrossbowEnchantmentsTogether();
+		
+		maxLevels.clear();
+		this.maxLevels = readcfg.maxLevels;
+		addAllEnchantments(this.maxLevels);
+		return this;
+	}
+	
+	public void updateConfig() {
+		fromByte(toByte());
+		addAllEnchantments(this.maxLevels);
+	}
+	
 	public boolean allowBypassAnvilMaxLevel() {
 		return bypassAnvilMaxLevel;
 	}
@@ -110,6 +111,40 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	public boolean allowCrossbowEnchantmentsTogether() {
 		return allowCrossbowEnchantmentsTogether;
 	}
+	
+	public boolean isBypassAnvilMaxLevel() {
+		return bypassAnvilMaxLevel;
+	}
 
+	public boolean isAllowBowEnchantmentsTogether() {
+		return allowBowEnchantmentsTogether;
+	}
+
+	public boolean isAllowDamageEnchantmentsTogether() {
+		return allowDamageEnchantmentsTogether;
+	}
+
+	public boolean isAllowProtectionEnchantmentsTogether() {
+		return allowProtectionEnchantmentsTogether;
+	}
+
+	public boolean isAllowCrossbowEnchantmentsTogether() {
+		return allowCrossbowEnchantmentsTogether;
+	}
+	
+	public HashMap<String, Byte> getMaxLevels() {
+		return maxLevels;
+	}
+	
+	private static HashMap<String, Byte> addAllEnchantments(HashMap<String, Byte> enchants) {
+		for (Enchantment e : Registries.ENCHANTMENT) {
+			if (!enchants.containsKey(EnchantmentHelper.getEnchantmentId(e).toString())) {
+				enchants.put(EnchantmentHelper.getEnchantmentId(e).toString(), (byte) e.getMaxLevel());
+			}
+		}
+		return enchants;
+	}
+
+	
 
 }

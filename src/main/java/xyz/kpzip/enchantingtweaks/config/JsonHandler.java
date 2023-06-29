@@ -27,26 +27,43 @@ public abstract class JsonHandler {
 		EnchantingTweaks.LOGGER.info("Readig Config...");
 		List<String> file;
 		Gson gson = new Gson();
-		Path config = getConfigPath(fileName, fileType, modid);
+		Path configPath = getConfigPath(fileName, fileType, modid);
+		T config = newconfig.get();
 		try {
+			
 			//If the config doesn't exist, write defaults
-			if (!Files.exists(config)) {
+			if (!Files.exists(configPath)) {
 				EnchantingTweaks.LOGGER.info("Config File does not exist, writing defaults...");
-				Files.writeString(config, gson.toJson(newconfig.get()));
+				writeConfig(gson, configPath, config);
+				return config;
 			}
-			file = Files.readAllLines(config);
+			
+			//Read the config file
+			file = Files.readAllLines(configPath);
 			String json = String.join("", file);
-			return gson.fromJson(json, type);
+			config = gson.fromJson(json, type);
+			
+			//Update and write the config back in case it is out of date
+			config.updateConfig();
+			writeConfig(gson, configPath, config);
+			
+			return config;
+			
+			
 		} catch (IOException e) {
 			EnchantingTweaks.LOGGER.error("Error opening configuration file");
 			EnchantingTweaks.LOGGER.error(e.getMessage());
 			e.printStackTrace();
-			return newconfig.get();
+			return config;
 		} catch (JsonSyntaxException e) {
 			EnchantingTweaks.LOGGER.error("Error reading configuration file");
 			EnchantingTweaks.LOGGER.error(e.getMessage());
-			return newconfig.get();
+			return config;
 		}
+	}
+	
+	public static <T extends SyncedConfig> void writeConfig(Gson g, Path p, T c) throws IOException {
+		Files.writeString(p, g.toJson(c));
 	}
 
 }

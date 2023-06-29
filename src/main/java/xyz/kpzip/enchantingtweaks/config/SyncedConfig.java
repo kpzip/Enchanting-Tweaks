@@ -10,5 +10,9 @@ public interface SyncedConfig {
 	public void writeToPacket(PacketByteBuf buf);
 	
 	public Identifier getSyncPacketIdentifier();
+	
+	public <T extends SyncedConfig> T reloadFromFile();
+	
+	public void updateConfig();
 
 }

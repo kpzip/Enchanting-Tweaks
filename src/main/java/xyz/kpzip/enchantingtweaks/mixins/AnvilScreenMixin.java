@@ -38,7 +38,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         if (i > 0) {
             Text text;
             int j = 8453920;
-            if (i >= 40 && !this.client.player.getAbilities().creativeMode && !EnchantingTweaks.CONFIG.allowBypassAnvilMaxLevel()) {
+            if (i >= 40 && !this.client.player.getAbilities().creativeMode && !EnchantingTweaks.getConfig().allowBypassAnvilMaxLevel()) {
                 text = Text.translatable("container.repair.expensive");
                 j = 0xFF6060;
             } else 
