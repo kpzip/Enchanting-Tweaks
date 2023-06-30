@@ -1,6 +1,7 @@
 # Enchanting Tweaks
 
-Highly configurable tweaks to the enchanting system including:
+Various tweaks, improvements and QOL changes to the minecraft enchanting system.
+Highly configurable tweaks to the enchanting system include:
 
 - Ability to remove the anvil level limit (The "TOO EXPENSIVE!" text)
 - Ability to allow "exclusive" enchantments to be combined (e.x. Infinity & Mending)
