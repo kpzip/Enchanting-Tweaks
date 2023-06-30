@@ -1,6 +1,6 @@
 # Enchanting Tweaks
 
-Various tweaks, improvements and QOL changes to the minecraft enchanting system.
+Various tweaks, improvements, and QOL changes to the minecraft enchanting system.
 Highly configurable tweaks to the enchanting system include:
 
 - Ability to remove the anvil level limit (The "TOO EXPENSIVE!" text)
