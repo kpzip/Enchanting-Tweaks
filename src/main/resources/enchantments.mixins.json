@@ -6,7 +6,8 @@
   "mixins": [
   	"ProtectionEnchantmentMixin",
   	"InfinityEnchantmentMixin",
-  	"DamageEnchantmentMixin"
+  	"DamageEnchantmentMixin",
+  	"EnchantmentMixin"
   ],
   "client": [],
   "server": [],

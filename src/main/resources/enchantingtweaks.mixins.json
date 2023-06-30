@@ -4,7 +4,12 @@
   "package": "xyz.kpzip.enchantingtweaks.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  	"AnvilScreenHandlerMixin"
+  	"AnvilScreenHandlerMixin",
+  	"EnchantmentHelperMixin",
+  	"EnchantRandomlyLootFunctionMixin",
+  	"EnchantBookFactoryMixin",
+  	"ItemGroupsMixin",
+  	"EnchantCommandMixin"
   ],
   "client": [
   	"AnvilScreenMixin"

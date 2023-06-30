@@ -16,7 +16,7 @@ import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient {
 
-	@Inject(method = "disconnect", at = @At("TAIL"))
+	@Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("TAIL"))
 	public void onDisconnect(Screen screen, CallbackInfo ci) {
 		for (SyncedConfig c : ConfigHandler.configs) {
 			c.reloadFromFile();

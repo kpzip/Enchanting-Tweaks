@@ -1,6 +1,7 @@
 package xyz.kpzip.enchantingtweaks.networking;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -21,30 +22,13 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	private boolean allowDamageEnchantmentsTogether = false;
 	private boolean allowProtectionEnchantmentsTogether = false;
 	private boolean allowCrossbowEnchantmentsTogether = false;
+	private boolean showAllLevelEnchantedBooksInCreativeInventory = true;
+	private boolean enchantmentCommandAbidesByMaxLevel = false;
 	
-	private HashMap<String, Byte> maxLevels = addAllEnchantments(new HashMap<String, Byte>());
+	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
 	
 	public EnchantingTweaksConfig() {
 		updateConfig();
-	}
-	
-	//encode boolean values into a single byte for syncing
-	public byte toByte() {
-		byte b = 0;
-		if (bypassAnvilMaxLevel) b |= 128;
-		if (allowBowEnchantmentsTogether) b |= 64;
-		if (allowDamageEnchantmentsTogether) b |= 32;
-		if (allowProtectionEnchantmentsTogether) b |= 16;
-		if (allowCrossbowEnchantmentsTogether) b |= 8;
-		return b;
-	}
-	
-	public void fromByte(byte b) {
-		if (b % 256 > 127) bypassAnvilMaxLevel = true; else bypassAnvilMaxLevel = false; //is bit 1 set?
-		if (b % 128 > 63) allowBowEnchantmentsTogether = true; else allowBowEnchantmentsTogether = false; //is bit 2 set?
-		if (b % 64 > 31) allowDamageEnchantmentsTogether = true; else allowDamageEnchantmentsTogether = false; //is bit 3 set?
-		if (b % 32 > 15) allowProtectionEnchantmentsTogether = true; else allowProtectionEnchantmentsTogether = false; //is bit 4 set?
-		if (b % 16 > 7) allowCrossbowEnchantmentsTogether = true; else allowCrossbowEnchantmentsTogether = false; //is bit 5 set?
 	}
 	
 	public String getFileName() {
@@ -62,14 +46,37 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 
 	@Override
 	public void loadFromPacket(PacketByteBuf buf) {
-		this.fromByte(buf.readByte());
+		this.maxLevels = maxLevelsFromPacket(buf);
+		bypassAnvilMaxLevel = buf.readBoolean();
+		allowBowEnchantmentsTogether = buf.readBoolean();
+		allowDamageEnchantmentsTogether = buf.readBoolean();
+		allowProtectionEnchantmentsTogether = buf.readBoolean();
+		allowCrossbowEnchantmentsTogether = buf.readBoolean();
+		showAllLevelEnchantedBooksInCreativeInventory = buf.readBoolean();
+		enchantmentCommandAbidesByMaxLevel = buf.readBoolean();
 		buf.release();
 	}
+	
+	public static Map<String, Integer> maxLevelsFromPacket(PacketByteBuf buf) {
+        return buf.readMap(PacketByteBuf::readString, PacketByteBuf::readInt);
+    }
 
 	@Override
 	public void writeToPacket(PacketByteBuf buf) {
-		buf.writeByte(this.toByte());
+		maxLevelsToPacket(buf, maxLevels);
+		buf.writeBoolean(bypassAnvilMaxLevel);
+		buf.writeBoolean(allowBowEnchantmentsTogether);
+		buf.writeBoolean(allowDamageEnchantmentsTogether);
+		buf.writeBoolean(allowProtectionEnchantmentsTogether);
+		buf.writeBoolean(allowCrossbowEnchantmentsTogether);
+		buf.writeBoolean(showAllLevelEnchantedBooksInCreativeInventory);
+		buf.writeBoolean(enchantmentCommandAbidesByMaxLevel);
+		
 	}
+	
+	public static void maxLevelsToPacket(PacketByteBuf buf, Map<String, Integer> m) {
+		buf.writeMap(m, PacketByteBuf::writeString, (buffer, i) -> {buffer.writeInt(i);});
+    }
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -80,6 +87,8 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		this.allowDamageEnchantmentsTogether = readcfg.allowDamageEnchantmentsTogether();
 		this.allowProtectionEnchantmentsTogether = readcfg.allowProtectionEnchantmentsTogether();
 		this.allowCrossbowEnchantmentsTogether = readcfg.allowCrossbowEnchantmentsTogether();
+		this.showAllLevelEnchantedBooksInCreativeInventory = readcfg.showAllLevelEnchantedBooksInCreativeInventory();
+		this.enchantmentCommandAbidesByMaxLevel = readcfg.enchantmentCommandAbidesByMaxLevel();
 		
 		maxLevels.clear();
 		this.maxLevels = readcfg.maxLevels;
@@ -88,7 +97,6 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	}
 	
 	public void updateConfig() {
-		fromByte(toByte());
 		addAllEnchantments(this.maxLevels);
 	}
 	
@@ -112,39 +120,26 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		return allowCrossbowEnchantmentsTogether;
 	}
 	
-	public boolean isBypassAnvilMaxLevel() {
-		return bypassAnvilMaxLevel;
-	}
-
-	public boolean isAllowBowEnchantmentsTogether() {
-		return allowBowEnchantmentsTogether;
-	}
-
-	public boolean isAllowDamageEnchantmentsTogether() {
-		return allowDamageEnchantmentsTogether;
-	}
-
-	public boolean isAllowProtectionEnchantmentsTogether() {
-		return allowProtectionEnchantmentsTogether;
-	}
-
-	public boolean isAllowCrossbowEnchantmentsTogether() {
-		return allowCrossbowEnchantmentsTogether;
+	public boolean showAllLevelEnchantedBooksInCreativeInventory() {
+		return showAllLevelEnchantedBooksInCreativeInventory;
 	}
 	
-	public HashMap<String, Byte> getMaxLevels() {
+	public boolean enchantmentCommandAbidesByMaxLevel() {
+		return enchantmentCommandAbidesByMaxLevel;
+	}
+	
+	public Map<String, Integer> getMaxLevels() {
 		return maxLevels;
 	}
 	
-	private static HashMap<String, Byte> addAllEnchantments(HashMap<String, Byte> enchants) {
+	private static Map<String, Integer> addAllEnchantments(Map<String, Integer> maxLevels2) {
 		for (Enchantment e : Registries.ENCHANTMENT) {
-			if (!enchants.containsKey(EnchantmentHelper.getEnchantmentId(e).toString())) {
-				enchants.put(EnchantmentHelper.getEnchantmentId(e).toString(), (byte) e.getMaxLevel());
+			if (!maxLevels2.containsKey(EnchantmentHelper.getEnchantmentId(e).toString())) {
+				maxLevels2.put(EnchantmentHelper.getEnchantmentId(e).toString(), e.getMaxLevel());
 			}
 		}
-		return enchants;
+		return maxLevels2;
 	}
-
 	
 
 }

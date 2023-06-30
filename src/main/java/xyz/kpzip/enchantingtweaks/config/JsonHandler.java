@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import net.fabricmc.loader.api.FabricLoader;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
+import xyz.kpzip.enchantingtweaks.networking.EnchantingTweaksConfig;
 
 public abstract class JsonHandler {
 	
@@ -26,7 +28,7 @@ public abstract class JsonHandler {
 	public static <T extends SyncedConfig> T readConfig(Class<T> type, Supplier<T> newconfig, String fileName, String fileType, String modid) {
 		EnchantingTweaks.LOGGER.info("Readig Config...");
 		List<String> file;
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Path configPath = getConfigPath(fileName, fileType, modid);
 		T config = newconfig.get();
 		try {
@@ -42,9 +44,11 @@ public abstract class JsonHandler {
 			file = Files.readAllLines(configPath);
 			String json = String.join("", file);
 			config = gson.fromJson(json, type);
+			EnchantingTweaks.LOGGER.info(String.valueOf(((EnchantingTweaksConfig) config).showAllLevelEnchantedBooksInCreativeInventory()));
 			
 			//Update and write the config back in case it is out of date
 			config.updateConfig();
+			EnchantingTweaks.LOGGER.info(String.valueOf(((EnchantingTweaksConfig) config).showAllLevelEnchantedBooksInCreativeInventory()));
 			writeConfig(gson, configPath, config);
 			
 			return config;

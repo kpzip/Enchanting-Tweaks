@@ -8,8 +8,8 @@ public abstract class EnchantmentLevelHelper {
 	
 	public static Integer getEnchantmentMaxLevel(Enchantment e) {
 		for (String s : EnchantingTweaks.getConfig().getMaxLevels().keySet()) {
-			if (s == EnchantmentHelper.getEnchantmentId(e).toString()) {
-				return EnchantingTweaks.getConfig().getMaxLevels().get(s).intValue() < 1 ? Byte.MAX_VALUE : EnchantingTweaks.getConfig().getMaxLevels().get(s).intValue();
+			if (s.equals(EnchantmentHelper.getEnchantmentId(e).toString())) {
+				return EnchantingTweaks.getConfig().getMaxLevels().get(s) < 1 ? Integer.MAX_VALUE : EnchantingTweaks.getConfig().getMaxLevels().get(s);
 			}
 		}
 		return e.getMaxLevel();

@@ -1,6 +1,5 @@
 package xyz.kpzip.enchantingtweaks.mixins;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,8 +27,9 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 		this.player = playerInventory.player;
 	}
 	
-	@Shadow @Final private final PlayerEntity player;
+	@Shadow private final PlayerEntity player;
 
+	//TODO Overwrite: Maintain this for every update in case the original changes
 	@Overwrite
 	public void drawForeground(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.disableBlend();

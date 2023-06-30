@@ -10,8 +10,9 @@ import xyz.kpzip.enchantingtweaks.networking.EnchantingTweaksConfig;
 public class EnchantingTweaks implements ModInitializer {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger("enchantingtweaks");
-
+	
 	public static final String MOD_ID = "enchantingtweaks";
+	//Change mod version in fabric.mod.json and in gradle.properties
 	public static final String MOD_VERSION = "1.0.0";
 	private static final EnchantingTweaksConfig CONFIG = new EnchantingTweaksConfig().reloadFromFile();
 	
