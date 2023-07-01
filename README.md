@@ -17,7 +17,7 @@ Edit the values to your liking, and then save the file and restart minecraft to 
 
 # Config
 
-[Config Documentation]{https://github.com/kpzip/Enchanting-Tweaks/wiki/Config}
+[Config Documentation](https://github.com/kpzip/Enchanting-Tweaks/wiki/Config)
 
 ## License
 
