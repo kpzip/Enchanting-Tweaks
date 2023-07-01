@@ -1,5 +1,6 @@
-## Enchanting Tweaks Configuration:
+## Enchanting Tweaks Configuration
 
+Configuration is stored in `<Your Minecraft Folder>/config/enchantingtweaks`.<br>
 this file serves to explain the function of all of the options in enchanting-tweaks-config.json
 
 # bypassAnvilMaxLevel
