@@ -15,6 +15,10 @@ Place the `.jar` file in your mods folder and launch the game. This should gener
 <br><br>
 Edit the values to your liking, and then save the file and restart minecraft to apply the changes.
 
+# Config
+
+[Config Documentation]{https://github.com/kpzip/Enchanting-Tweaks/wiki/Config}
+
 ## License
 
 Licensed under the MIT License.
