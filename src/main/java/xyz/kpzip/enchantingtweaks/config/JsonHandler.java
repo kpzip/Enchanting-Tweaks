@@ -13,7 +13,6 @@ import com.google.gson.JsonSyntaxException;
 
 import net.fabricmc.loader.api.FabricLoader;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
-import xyz.kpzip.enchantingtweaks.networking.EnchantingTweaksConfig;
 
 public abstract class JsonHandler {
 	
@@ -44,11 +43,9 @@ public abstract class JsonHandler {
 			file = Files.readAllLines(configPath);
 			String json = String.join("", file);
 			config = gson.fromJson(json, type);
-			EnchantingTweaks.LOGGER.info(String.valueOf(((EnchantingTweaksConfig) config).showAllLevelEnchantedBooksInCreativeInventory()));
 			
 			//Update and write the config back in case it is out of date
 			config.updateConfig();
-			EnchantingTweaks.LOGGER.info(String.valueOf(((EnchantingTweaksConfig) config).showAllLevelEnchantedBooksInCreativeInventory()));
 			writeConfig(gson, configPath, config);
 			
 			return config;
