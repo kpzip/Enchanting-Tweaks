@@ -20,7 +20,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 @Mixin(CrossbowItem.class)
-public class CrossbowItemMixin {
+public abstract class CrossbowItemMixin {
 	
 	@Shadow
 	private static final String CHARGED_PROJECTILES_KEY = "ChargedProjectiles";
