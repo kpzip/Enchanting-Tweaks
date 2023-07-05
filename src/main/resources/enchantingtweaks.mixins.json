@@ -9,7 +9,8 @@
   	"EnchantRandomlyLootFunctionMixin",
   	"EnchantBookFactoryMixin",
   	"ItemGroupsMixin",
-  	"EnchantCommandMixin"
+  	"EnchantCommandMixin",
+  	"CrossbowItemMixin"
   ],
   "client": [
   	"AnvilScreenMixin"
