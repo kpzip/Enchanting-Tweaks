@@ -28,6 +28,7 @@ public class CrossbowItemMixin {
 	@Shadow
 	private static boolean loadProjectile(LivingEntity shooter, ItemStack crossbow, ItemStack projectile, boolean simulated, boolean creative) { return true; }
 	
+	//TODO Overwrite: Maintain this for every update in case the original changes
 	@Overwrite
 	private static boolean loadProjectiles(LivingEntity shooter, ItemStack crossbow) {
         int i = EnchantmentHelper.getLevel(Enchantments.MULTISHOT, crossbow);
@@ -58,6 +59,7 @@ public class CrossbowItemMixin {
 	@Shadow
 	private static void postShoot(World world, LivingEntity entity, ItemStack stack) {}
 	
+	//TODO Overwrite: Maintain this for every update in case the original changes
 	@Overwrite
 	public static void shootAll(World world, LivingEntity entity, Hand hand, ItemStack stack, float speed, float divergence) {
         List<ItemStack> list = getProjectiles(stack);
@@ -100,6 +102,7 @@ public class CrossbowItemMixin {
 		if (arrowNum%2 == 1) return -spread; else return spread;
 	}
 	
+	//TODO Overwrite: Maintain this for every update in case the original changes (marked as @unique since the parameters needed to be changed)
 	@Unique
 	private static float[] getSounds(Random random, int len) {
         boolean bl = random.nextBoolean();
