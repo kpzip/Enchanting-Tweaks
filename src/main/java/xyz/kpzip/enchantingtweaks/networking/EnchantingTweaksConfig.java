@@ -1,7 +1,9 @@
 package xyz.kpzip.enchantingtweaks.networking;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -18,14 +20,11 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	public static final String FILE_EXTENSION = "json";
 	
 	private boolean bypassAnvilMaxLevel = true;
-	private boolean allowBowEnchantmentsTogether = true;
-	private boolean allowDamageEnchantmentsTogether = false;
-	private boolean allowProtectionEnchantmentsTogether = false;
-	private boolean allowCrossbowEnchantmentsTogether = false;
 	private boolean showAllLevelEnchantedBooksInCreativeInventory = true;
 	private boolean enchantmentCommandAbidesByMaxLevel = false;
 	
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
+	private Map<Set<String>, Boolean> exclusivity = getExclusivity(new HashMap<Set<String>, Boolean>());
 	
 	public EnchantingTweaksConfig() {
 		updateConfig();
@@ -47,11 +46,8 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	@Override
 	public void loadFromPacket(PacketByteBuf buf) {
 		this.maxLevels = maxLevelsFromPacket(buf);
+		this.exclusivity = exclusivityFromPacket(buf);
 		bypassAnvilMaxLevel = buf.readBoolean();
-		allowBowEnchantmentsTogether = buf.readBoolean();
-		allowDamageEnchantmentsTogether = buf.readBoolean();
-		allowProtectionEnchantmentsTogether = buf.readBoolean();
-		allowCrossbowEnchantmentsTogether = buf.readBoolean();
 		showAllLevelEnchantedBooksInCreativeInventory = buf.readBoolean();
 		enchantmentCommandAbidesByMaxLevel = buf.readBoolean();
 		buf.release();
@@ -60,15 +56,16 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	public static Map<String, Integer> maxLevelsFromPacket(PacketByteBuf buf) {
         return buf.readMap(PacketByteBuf::readString, PacketByteBuf::readInt);
     }
+	
+	public static Map<Set<String>, Boolean> exclusivityFromPacket(PacketByteBuf buf) {
+		return buf.readMap(bufx -> {return bufx.readCollection(HashSet::new, bufy -> {return bufy.readString();});}, PacketByteBuf::readBoolean);
+	}
 
 	@Override
 	public void writeToPacket(PacketByteBuf buf) {
 		maxLevelsToPacket(buf, maxLevels);
+		exclusivityToPacket(buf, exclusivity);
 		buf.writeBoolean(bypassAnvilMaxLevel);
-		buf.writeBoolean(allowBowEnchantmentsTogether);
-		buf.writeBoolean(allowDamageEnchantmentsTogether);
-		buf.writeBoolean(allowProtectionEnchantmentsTogether);
-		buf.writeBoolean(allowCrossbowEnchantmentsTogether);
 		buf.writeBoolean(showAllLevelEnchantedBooksInCreativeInventory);
 		buf.writeBoolean(enchantmentCommandAbidesByMaxLevel);
 		
@@ -78,46 +75,37 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		buf.writeMap(m, PacketByteBuf::writeString, (buffer, i) -> {buffer.writeInt(i);});
     }
 	
+	//This is why I don't like lambdas.
+	public static void exclusivityToPacket(PacketByteBuf buf, Map<Set<String>, Boolean> m) {
+		buf.writeMap(m, (bufx, pairs) -> {bufx.writeCollection(pairs, (bufy, str) -> {bufy.writeString(str);});}, (bufz, i) -> {bufz.writeBoolean(i);});
+    }
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public EnchantingTweaksConfig reloadFromFile() {
 		EnchantingTweaksConfig readcfg = JsonHandler.readConfig(EnchantingTweaksConfig.class, EnchantingTweaksConfig::new, FILE_NAME, FILE_EXTENSION, EnchantingTweaks.MOD_ID);
 		this.bypassAnvilMaxLevel = readcfg.allowBypassAnvilMaxLevel();
-		this.allowBowEnchantmentsTogether = readcfg.allowBowEnchantmentsTogether();
-		this.allowDamageEnchantmentsTogether = readcfg.allowDamageEnchantmentsTogether();
-		this.allowProtectionEnchantmentsTogether = readcfg.allowProtectionEnchantmentsTogether();
-		this.allowCrossbowEnchantmentsTogether = readcfg.allowCrossbowEnchantmentsTogether();
 		this.showAllLevelEnchantedBooksInCreativeInventory = readcfg.showAllLevelEnchantedBooksInCreativeInventory();
 		this.enchantmentCommandAbidesByMaxLevel = readcfg.enchantmentCommandAbidesByMaxLevel();
 		
 		maxLevels.clear();
 		this.maxLevels = readcfg.maxLevels;
-		addAllEnchantments(this.maxLevels);
+		//addAllEnchantments(this.maxLevels);
+		
+		exclusivity.clear();
+		this.exclusivity = readcfg.exclusivity;
+		//getExclusivity(this.exclusivity);
+		
 		return this;
 	}
 	
 	public void updateConfig() {
 		addAllEnchantments(this.maxLevels);
+		getExclusivity(this.exclusivity);
 	}
 	
 	public boolean allowBypassAnvilMaxLevel() {
 		return bypassAnvilMaxLevel;
-	}
-
-	public boolean allowBowEnchantmentsTogether() {
-		return allowBowEnchantmentsTogether;
-	}
-
-	public boolean allowDamageEnchantmentsTogether() {
-		return allowDamageEnchantmentsTogether;
-	}
-
-	public boolean allowProtectionEnchantmentsTogether() {
-		return allowProtectionEnchantmentsTogether;
-	}
-	
-	public boolean allowCrossbowEnchantmentsTogether() {
-		return allowCrossbowEnchantmentsTogether;
 	}
 	
 	public boolean showAllLevelEnchantedBooksInCreativeInventory() {
@@ -132,13 +120,38 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		return maxLevels;
 	}
 	
-	private static Map<String, Integer> addAllEnchantments(Map<String, Integer> maxLevels2) {
+	public Map<Set<String>, Boolean> getExclusivity() {
+		return exclusivity;
+	}
+	
+	private static Map<String, Integer> addAllEnchantments(Map<String, Integer> maxLevels) {
 		for (Enchantment e : Registries.ENCHANTMENT) {
-			if (!maxLevels2.containsKey(EnchantmentHelper.getEnchantmentId(e).toString())) {
-				maxLevels2.put(EnchantmentHelper.getEnchantmentId(e).toString(), e.getMaxLevel());
+			if (!maxLevels.containsKey(EnchantmentHelper.getEnchantmentId(e).toString())) {
+				maxLevels.put(EnchantmentHelper.getEnchantmentId(e).toString(), e.getMaxLevel());
 			}
 		}
-		return maxLevels2;
+		return maxLevels;
+	}
+	
+	
+	
+	private static Map<Set<String>, Boolean> getExclusivity(Map<Set<String>, Boolean> exclusivity) {
+		Set<String> mapping;
+		Enchantment e1, e2;
+		for (int i = 0; i < Registries.ENCHANTMENT.size(); i++) {
+			for (int j = i+1; j < Registries.ENCHANTMENT.size(); j++) {
+				mapping = new HashSet<String>();
+				e1 = Registries.ENCHANTMENT.get(i);
+				e2 = Registries.ENCHANTMENT.get(j);
+				mapping.add(EnchantmentHelper.getEnchantmentId(e1).toString());
+				mapping.add(EnchantmentHelper.getEnchantmentId(e2).toString());
+				if (!exclusivity.containsKey(mapping)) {
+					//Need to check the combination both ways, since sometimes this function will return different values depending on the order (Thank you Mojang, very cool)
+					exclusivity.put(mapping, e1.canAccept(e2) && e2.canAccept(e1));
+				}
+			}
+		}
+		return exclusivity;
 	}
 	
 

@@ -24,4 +24,10 @@ public class EnchantingTweaks implements ModInitializer {
 	public static EnchantingTweaksConfig getConfig() {
 		return CONFIG;
 	}
+	
+	//TODO lightning damage + damage option
+	//TODO refine crossbow spread
+	//TODO allow lighitning from channeling always option
+	//TODO allow channeling to start lightning storm
+	//TODO allow riptide always
 }

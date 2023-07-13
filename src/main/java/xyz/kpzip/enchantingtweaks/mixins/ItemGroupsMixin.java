@@ -22,6 +22,7 @@ import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
 @Mixin(ItemGroups.class)
 public abstract class ItemGroupsMixin {
 	
+	//TODO make this work
 	/*
 	@Redirect(method = "addMaxLevelEnchantedBooks", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
 	private static int getRealMaxLevel(Enchantment e) {

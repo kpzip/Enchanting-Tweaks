@@ -10,7 +10,9 @@
   	"EnchantBookFactoryMixin",
   	"ItemGroupsMixin",
   	"EnchantCommandMixin",
-  	"CrossbowItemMixin"
+  	"CrossbowItemMixin",
+  	"TridentEntityMixin",
+  	"EnchantmentMixin"
   ],
   "client": [
   	"AnvilScreenMixin"

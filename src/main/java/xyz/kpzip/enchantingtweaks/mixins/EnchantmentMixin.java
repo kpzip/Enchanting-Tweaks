@@ -1,8 +1,10 @@
-package xyz.kpzip.enchantingtweaks.mixins.enchantment;
+package xyz.kpzip.enchantingtweaks.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.screen.ScreenTexts;
@@ -14,8 +16,8 @@ import xyz.kpzip.enchantingtweaks.util.RomanNumerals;
 
 @Mixin(Enchantment.class)
 public abstract class EnchantmentMixin {
-	
-	@Shadow public abstract String getTranslationKey();
+
+@Shadow public abstract String getTranslationKey();
 	
 	@Shadow public abstract boolean isCursed();
 	
@@ -33,5 +35,10 @@ public abstract class EnchantmentMixin {
         }
         return mutableText;
     }
+	
+	@Redirect(method = "canCombine", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;canAccept(Lnet/minecraft/enchantment/Enchantment;)Z"))
+	private boolean acautallyCanAccept(Enchantment e1, Enchantment e2) {
+		return EnchantmentLevelHelper.canCombine(e1, e2);
+	}
 
 }

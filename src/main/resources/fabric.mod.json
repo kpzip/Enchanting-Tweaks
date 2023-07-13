@@ -27,9 +27,9 @@
   },
   "mixins": [
     "enchantingtweaks.mixins.json",
-    "cfg.mixins.json",
-    "enchantments.mixins.json"
+    "cfg.mixins.json"
   ],
+  "accessWidener" : "enchantingtweaks.accesswidener",
 
   "depends": {
     "fabricloader": "*",

@@ -71,7 +71,7 @@ public abstract class CrossbowItemMixin {
             ItemStack itemStack = list.get(i);
             if (itemStack.isEmpty()) continue;
             
-            shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, getArrowSpread(i, Math.max(list.size(), 19)));
+            shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, getArrowSpread(i, list.size() > 19 ? 19 : list.size()));
             /*
             if (i == 0) {
                 shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, 0.0f);
