@@ -13,15 +13,18 @@ import net.minecraft.util.Identifier;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 import xyz.kpzip.enchantingtweaks.config.JsonHandler;
 import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
+import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
 
 public class EnchantingTweaksConfig implements SyncedConfig {
 	
 	public static final String FILE_NAME = "enchanting-tweaks-config";
 	public static final String FILE_EXTENSION = "json";
 	
+	//Defaults
 	private boolean bypassAnvilMaxLevel = true;
 	private boolean showAllLevelEnchantedBooksInCreativeInventory = true;
 	private boolean enchantmentCommandAbidesByMaxLevel = false;
+	private boolean allowRiptideAllways = false;
 	
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
 	private Map<Set<String>, Boolean> exclusivity = getExclusivity(new HashMap<Set<String>, Boolean>());
@@ -50,6 +53,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		bypassAnvilMaxLevel = buf.readBoolean();
 		showAllLevelEnchantedBooksInCreativeInventory = buf.readBoolean();
 		enchantmentCommandAbidesByMaxLevel = buf.readBoolean();
+		allowRiptideAllways = buf.readBoolean();
 		buf.release();
 	}
 	
@@ -68,6 +72,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		buf.writeBoolean(bypassAnvilMaxLevel);
 		buf.writeBoolean(showAllLevelEnchantedBooksInCreativeInventory);
 		buf.writeBoolean(enchantmentCommandAbidesByMaxLevel);
+		buf.writeBoolean(allowRiptideAllways);
 		
 	}
 	
@@ -87,12 +92,11 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		this.bypassAnvilMaxLevel = readcfg.allowBypassAnvilMaxLevel();
 		this.showAllLevelEnchantedBooksInCreativeInventory = readcfg.showAllLevelEnchantedBooksInCreativeInventory();
 		this.enchantmentCommandAbidesByMaxLevel = readcfg.enchantmentCommandAbidesByMaxLevel();
+		this.allowRiptideAllways = readcfg.allowRiptideAllways();
 		
-		maxLevels.clear();
 		this.maxLevels = readcfg.maxLevels;
 		//addAllEnchantments(this.maxLevels);
 		
-		exclusivity.clear();
 		this.exclusivity = readcfg.exclusivity;
 		//getExclusivity(this.exclusivity);
 		
@@ -114,6 +118,10 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	
 	public boolean enchantmentCommandAbidesByMaxLevel() {
 		return enchantmentCommandAbidesByMaxLevel;
+	}
+	
+	public boolean allowRiptideAllways() {
+		return allowRiptideAllways;
 	}
 	
 	public Map<String, Integer> getMaxLevels() {
@@ -140,14 +148,16 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		Enchantment e1, e2;
 		for (int i = 0; i < Registries.ENCHANTMENT.size(); i++) {
 			for (int j = i+1; j < Registries.ENCHANTMENT.size(); j++) {
-				mapping = new HashSet<String>();
 				e1 = Registries.ENCHANTMENT.get(i);
 				e2 = Registries.ENCHANTMENT.get(j);
-				mapping.add(EnchantmentHelper.getEnchantmentId(e1).toString());
-				mapping.add(EnchantmentHelper.getEnchantmentId(e2).toString());
-				if (!exclusivity.containsKey(mapping)) {
-					//Need to check the combination both ways, since sometimes this function will return different values depending on the order (Thank you Mojang, very cool)
-					exclusivity.put(mapping, e1.canAccept(e2) && e2.canAccept(e1));
+				if (EnchantmentLevelHelper.canBeOnSameItem(e1, e2)) {
+					mapping = new HashSet<String>();
+					mapping.add(EnchantmentHelper.getEnchantmentId(e1).toString());
+					mapping.add(EnchantmentHelper.getEnchantmentId(e2).toString());
+					if (!exclusivity.containsKey(mapping)) {
+						//Need to check the combination both ways, since sometimes this function will return different values depending on the order (Thank you Mojang, very cool)
+						exclusivity.put(mapping, e1.canAccept(e2) && e2.canAccept(e1));
+					}
 				}
 			}
 		}

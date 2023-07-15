@@ -22,6 +22,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import xyz.kpzip.enchantingtweaks.util.Damager;
 
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity{
@@ -70,15 +71,16 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity{
             LightningEntity lightningEntity;
             BlockPos blockPos = entity.getBlockPos();
             if (this.getWorld().isSkyVisible(blockPos) && (lightningEntity = EntityType.LIGHTNING_BOLT.create(this.getWorld())) != null) {
-            	for (int i = 0; i < channeling; ++i) {
+            	for (int i = 0; i < channeling && i < 25; ++i) {
             		lightningEntity.refreshPositionAfterTeleport(Vec3d.ofBottomCenter(blockPos));
             		lightningEntity.setChanneler(entity2 instanceof ServerPlayerEntity ? (ServerPlayerEntity)entity2 : null);
+            		((Damager) lightningEntity).setDamageAmount(5.0f * channeling);
             		this.getWorld().spawnEntity(lightningEntity);
-            		soundEvent = SoundEvents.ITEM_TRIDENT_THUNDER;
             		if (i < channeling - 1) {
             			lightningEntity = EntityType.LIGHTNING_BOLT.create(this.getWorld());
             		}
             	}
+            	soundEvent = SoundEvents.ITEM_TRIDENT_THUNDER;
             	g = 4.5f + 0.5f * channeling;
             	g = g > 7.0f ? 7.0f : g;
             }

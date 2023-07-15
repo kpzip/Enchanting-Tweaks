@@ -12,7 +12,10 @@
   	"EnchantCommandMixin",
   	"CrossbowItemMixin",
   	"TridentEntityMixin",
-  	"EnchantmentMixin"
+  	"EnchantmentMixin",
+  	"LightningEntityMixin",
+  	"EntityMixin",
+  	"TridentItemMixin"
   ],
   "client": [
   	"AnvilScreenMixin"
