@@ -27,7 +27,8 @@ public abstract class JsonHandler {
 	public static <T extends SyncedConfig> T readConfig(Class<T> type, Supplier<T> newconfig, String fileName, String fileType, String modid) {
 		EnchantingTweaks.LOGGER.info("Readig Config...");
 		List<String> file;
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		//Why do I have to call a function to get it to work properly? shouldn't it work properly by default? see: https://github.com/google/gson/issues/210
+		Gson gson = new GsonBuilder().setPrettyPrinting().enableComplexMapKeySerialization().create();
 		Path configPath = getConfigPath(fileName, fileType, modid);
 		T config = newconfig.get();
 		try {
@@ -59,6 +60,7 @@ public abstract class JsonHandler {
 		} catch (JsonSyntaxException e) {
 			EnchantingTweaks.LOGGER.error("Error reading configuration file");
 			EnchantingTweaks.LOGGER.error(e.getMessage());
+			e.printStackTrace();
 			return config;
 		}
 	}
