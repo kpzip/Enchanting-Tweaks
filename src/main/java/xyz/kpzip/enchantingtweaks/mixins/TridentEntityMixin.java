@@ -37,7 +37,11 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity{
 	@Shadow
 	private ItemStack tridentStack;
 
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason allow channeling tridents to strike multiple times and deal more damage with increasing levels.
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
 	@Override
     public void onEntityHit(EntityHitResult entityHitResult) {

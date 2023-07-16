@@ -29,7 +29,11 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 	
 	@Shadow private final PlayerEntity player;
 
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason add overrides for settings in EnchantingTweaks
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
 	public void drawForeground(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.disableBlend();

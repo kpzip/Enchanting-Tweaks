@@ -33,7 +33,11 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler{
 		super(type, syncId, playerInventory, context);
 	}
 
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason add overrides for settings in EnchantingTweaks
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
 	public void updateResult() {
         ItemStack itemStack = this.input.getStack(0);

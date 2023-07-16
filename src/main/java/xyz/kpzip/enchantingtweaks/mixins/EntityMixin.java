@@ -29,7 +29,11 @@ public abstract class EntityMixin {
 	@Shadow
 	public abstract boolean damage(DamageSource source, float amount);
 	
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason allow lightning damage to be increased
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
 	public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
         this.setFireTicks(this.fireTicks + 1);

@@ -22,7 +22,11 @@ import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
 @Mixin(ItemGroups.class)
 public abstract class ItemGroupsMixin {
 	
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason allow the max level to be fetched from the enchanting tweaks config
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
 	private static void addMaxLevelEnchantedBooks(ItemGroup.Entries entries, RegistryWrapper<Enchantment> registryWrapper, Set<EnchantmentTarget> enchantmentTargets, ItemGroup.StackVisibility visibility) {
         registryWrapper.streamEntries().map(RegistryEntry::value).filter(enchantment -> enchantmentTargets.contains((Object)enchantment.target))
@@ -30,7 +34,11 @@ public abstract class ItemGroupsMixin {
         .forEach(stack -> entries.add((ItemStack)stack, visibility));
     }
 
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason allow the max level to be fetched from the enchanting tweaks config and dont add all level enchanted books if the level is greater than 15
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
     private static void addAllLevelEnchantedBooks(ItemGroup.Entries entries, RegistryWrapper<Enchantment> registryWrapper, Set<EnchantmentTarget> enchantmentTargets, ItemGroup.StackVisibility visibility) {
         if (EnchantingTweaks.getConfig().showAllLevelEnchantedBooksInCreativeInventory()) registryWrapper.streamEntries()

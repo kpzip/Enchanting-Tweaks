@@ -21,7 +21,11 @@ public abstract class EnchantmentMixin {
 	
 	@Shadow public abstract boolean isCursed();
 	
-	//TODO Overwrite: Maintain this for every update in case the original changes
+	/**
+	 * @Author kpzip
+	 * @Reason Stop using the lang file for roman numerals
+	 * TODO Overwrite: Maintain this for every update in case the original changes
+	 * */
 	@Overwrite
 	public Text getName(int level) {
         MutableText mutableText = Text.translatable(this.getTranslationKey());
