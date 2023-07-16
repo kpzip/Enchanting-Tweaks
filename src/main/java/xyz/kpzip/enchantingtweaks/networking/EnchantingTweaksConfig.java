@@ -11,11 +11,12 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
+import xyz.kpzip.enchantingtweaks.config.ConfigWithReadme;
 import xyz.kpzip.enchantingtweaks.config.JsonHandler;
 import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
 import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
 
-public class EnchantingTweaksConfig implements SyncedConfig {
+public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	
 	public static final String FILE_NAME = "enchanting-tweaks-config";
 	public static final String FILE_EXTENSION = "json";
@@ -162,6 +163,11 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 			}
 		}
 		return exclusivity;
+	}
+
+	@Override
+	public String getReadmeName() {
+		return "config_readme";
 	}
 	
 

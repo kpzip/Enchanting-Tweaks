@@ -1,9 +1,13 @@
 package xyz.kpzip.enchantingtweaks.config;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -37,6 +41,11 @@ public abstract class JsonHandler {
 			if (!Files.exists(configPath)) {
 				EnchantingTweaks.LOGGER.info("Config File does not exist, writing defaults...");
 				writeConfig(gson, configPath, config);
+				if (config instanceof ConfigWithReadme) {
+					ConfigWithReadme readmeconf = (ConfigWithReadme) config;
+					Path readmePath = getConfigPath(readmeconf.getReadmeName(), readmeconf.getReadmeExtension(), modid);
+					handleReadme(readmeconf, readmePath, config, modid);
+				}
 				return config;
 			}
 			
@@ -48,6 +57,12 @@ public abstract class JsonHandler {
 			//Update and write the config back in case it is out of date
 			config.updateConfig();
 			writeConfig(gson, configPath, config);
+			
+			if (config instanceof ConfigWithReadme) {
+				ConfigWithReadme readmeconf = (ConfigWithReadme) config;
+				Path readmePath = getConfigPath(readmeconf.getReadmeName(), readmeconf.getReadmeExtension(), modid);
+				handleReadme(readmeconf, readmePath, config, modid);
+			}
 			
 			return config;
 			
@@ -67,6 +82,21 @@ public abstract class JsonHandler {
 	
 	public static <T extends SyncedConfig> void writeConfig(Gson g, Path p, T c) throws IOException {
 		Files.writeString(p, g.toJson(c));
+	}
+	
+	private static <T extends SyncedConfig> void handleReadme(ConfigWithReadme readmeconf, Path readmePath, T config, String modid) throws IOException {
+		if (!Files.exists(readmePath)) {
+			InputStream in = config.getClass().getResourceAsStream("/data/" + modid + "/" + readmeconf.getReadmeName() + "." + readmeconf.getReadmeExtension());
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			String readmeline;
+			List<String> readmelines = new ArrayList<String>();
+			while ((readmeline = reader.readLine()) != null) {
+				readmelines.add(readmeline);
+			}
+			reader.close();
+			String readme = String.join("\n", readmelines);
+			Files.writeString(readmePath, readme);
+		}
 	}
 
 }
