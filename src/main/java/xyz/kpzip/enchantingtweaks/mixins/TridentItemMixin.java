@@ -13,12 +13,12 @@ public abstract class TridentItemMixin {
 	
 	@Redirect(method = "onStoppedUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isTouchingWaterOrRain()Z"))
 	private boolean shouldRiptideWork(PlayerEntity e) {
-		return e.isTouchingWaterOrRain() || EnchantingTweaks.getConfig().allowRiptideAllways();
+		return e.isTouchingWaterOrRain() || EnchantingTweaks.getConfig().allowRiptideAlways();
 	}
 	
 	@Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isTouchingWaterOrRain()Z"))
 	private boolean shouldRiptideWork2(PlayerEntity e) {
-		return e.isTouchingWaterOrRain() || EnchantingTweaks.getConfig().allowRiptideAllways();
+		return e.isTouchingWaterOrRain() || EnchantingTweaks.getConfig().allowRiptideAlways();
 	}
 
 

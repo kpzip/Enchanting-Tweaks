@@ -9,6 +9,8 @@ import xyz.kpzip.enchantingtweaks.networking.EnchantingTweaksConfig;
 
 public class EnchantingTweaks implements ModInitializer {
 	
+	//This Mod is licensed under the MIT License https://opensource.org/license/mit/
+	
 	public static final Logger LOGGER = LoggerFactory.getLogger("enchantingtweaks");
 	
 	public static final String MOD_ID = "enchantingtweaks";
@@ -24,9 +26,4 @@ public class EnchantingTweaks implements ModInitializer {
 	public static EnchantingTweaksConfig getConfig() {
 		return CONFIG;
 	}
-	
-	//TODO refine crossbow spread
-	//TODO allow lighitning from channeling always option
-	//TODO allow channeling to start lightning storm
-	//TODO allow riptide always
 }

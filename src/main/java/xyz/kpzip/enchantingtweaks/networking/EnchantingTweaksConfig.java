@@ -24,7 +24,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 	private boolean bypassAnvilMaxLevel = true;
 	private boolean showAllLevelEnchantedBooksInCreativeInventory = true;
 	private boolean enchantmentCommandAbidesByMaxLevel = false;
-	private boolean allowRiptideAllways = false;
+	private boolean allowRiptideAlways = false;
 	
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
 	private Map<Set<String>, Boolean> exclusivity = getExclusivity(new HashMap<Set<String>, Boolean>());
@@ -53,7 +53,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		bypassAnvilMaxLevel = buf.readBoolean();
 		showAllLevelEnchantedBooksInCreativeInventory = buf.readBoolean();
 		enchantmentCommandAbidesByMaxLevel = buf.readBoolean();
-		allowRiptideAllways = buf.readBoolean();
+		allowRiptideAlways = buf.readBoolean();
 		buf.release();
 	}
 	
@@ -72,7 +72,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		buf.writeBoolean(bypassAnvilMaxLevel);
 		buf.writeBoolean(showAllLevelEnchantedBooksInCreativeInventory);
 		buf.writeBoolean(enchantmentCommandAbidesByMaxLevel);
-		buf.writeBoolean(allowRiptideAllways);
+		buf.writeBoolean(allowRiptideAlways);
 		
 	}
 	
@@ -92,7 +92,7 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		this.bypassAnvilMaxLevel = readcfg.allowBypassAnvilMaxLevel();
 		this.showAllLevelEnchantedBooksInCreativeInventory = readcfg.showAllLevelEnchantedBooksInCreativeInventory();
 		this.enchantmentCommandAbidesByMaxLevel = readcfg.enchantmentCommandAbidesByMaxLevel();
-		this.allowRiptideAllways = readcfg.allowRiptideAllways();
+		this.allowRiptideAlways = readcfg.allowRiptideAlways();
 		
 		this.maxLevels = readcfg.maxLevels;
 		//addAllEnchantments(this.maxLevels);
@@ -120,8 +120,8 @@ public class EnchantingTweaksConfig implements SyncedConfig {
 		return enchantmentCommandAbidesByMaxLevel;
 	}
 	
-	public boolean allowRiptideAllways() {
-		return allowRiptideAllways;
+	public boolean allowRiptideAlways() {
+		return allowRiptideAlways;
 	}
 	
 	public Map<String, Integer> getMaxLevels() {

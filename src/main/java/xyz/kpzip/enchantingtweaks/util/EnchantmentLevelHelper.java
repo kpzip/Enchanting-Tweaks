@@ -44,7 +44,7 @@ public abstract class EnchantmentLevelHelper {
 		Map<Set<String>, Boolean> exclusivity = EnchantingTweaks.getConfig().getExclusivity();
 		for(Set<String> s : exclusivity.keySet()) {
 			if (s.equals(test)) {
-				return !exclusivity.get(s);
+				return exclusivity.get(s);
 			}
 		}
 		return e1.canAccept(e2) && e2.canAccept(e1);
