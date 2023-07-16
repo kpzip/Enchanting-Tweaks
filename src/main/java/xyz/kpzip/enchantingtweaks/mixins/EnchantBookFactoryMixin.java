@@ -5,9 +5,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.village.TradeOffers;
 import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
 
-@Mixin(targets = "net.minecraft.village.TradeOffers$EnchantBookFactory")
+@Mixin(TradeOffers.EnchantBookFactory.class)
 public abstract class EnchantBookFactoryMixin {
 	
 	@Redirect(method = "create", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
