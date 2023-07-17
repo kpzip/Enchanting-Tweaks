@@ -40,6 +40,8 @@ public abstract class JsonHandler {
 			//If the config doesn't exist, write defaults
 			if (!Files.exists(configPath)) {
 				EnchantingTweaks.LOGGER.info("Config File does not exist, writing defaults...");
+				Files.createDirectories(getConfigDirectory(modid));
+				Files.createFile(configPath);
 				writeConfig(gson, configPath, config);
 				if (config instanceof ConfigWithReadme) {
 					ConfigWithReadme readmeconf = (ConfigWithReadme) config;
