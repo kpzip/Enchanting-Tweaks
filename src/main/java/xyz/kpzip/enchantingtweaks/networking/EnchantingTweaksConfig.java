@@ -7,6 +7,7 @@ import java.util.Set;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -30,10 +31,12 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
 	private Map<Set<String>, Boolean> exclusivity = getExclusivity(new HashMap<Set<String>, Boolean>());
 	
+	private static final Set<Set<String>> DEFAULT_NON_EXCLUSIVE_ENCHANTMENTS = getDefaultNonExclusiveEnchantments();
+	
 	public EnchantingTweaksConfig() {
 		updateConfig();
 	}
-	
+
 	public String getFileName() {
 		return FILE_NAME;
 	}
@@ -157,7 +160,9 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 					mapping.add(EnchantmentHelper.getEnchantmentId(e2).toString());
 					if (!exclusivity.containsKey(mapping)) {
 						//Need to check the combination both ways, since sometimes this function will return different values depending on the order (Thank you Mojang, very cool)
-						exclusivity.put(mapping, e1.canAccept(e2) && e2.canAccept(e1));
+						boolean isNotExclusive = e1.canAccept(e2) && e2.canAccept(e1);
+						if (DEFAULT_NON_EXCLUSIVE_ENCHANTMENTS.contains(mapping)) isNotExclusive = true;
+						exclusivity.put(mapping, isNotExclusive);
 					}
 				}
 			}
@@ -168,6 +173,17 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	@Override
 	public String getReadmeName() {
 		return "config_readme";
+	}
+	
+	private static Set<Set<String>> getDefaultNonExclusiveEnchantments() {
+		Set<Set<String>> e = new HashSet<Set<String>>();
+		
+		Set<String> infMending = new HashSet<String>();
+		infMending.add(EnchantmentHelper.getEnchantmentId(Enchantments.INFINITY).toString());
+		infMending.add(EnchantmentHelper.getEnchantmentId(Enchantments.MENDING).toString());
+		e.add(infMending);
+		
+		return e;
 	}
 	
 
