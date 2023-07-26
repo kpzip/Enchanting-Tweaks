@@ -87,18 +87,16 @@ public abstract class JsonHandler {
 	}
 	
 	private static <T extends SyncedConfig> void handleReadme(ConfigWithReadme readmeconf, Path readmePath, T config, String modid) throws IOException {
-		if (!Files.exists(readmePath)) {
-			InputStream in = config.getClass().getResourceAsStream("/data/" + modid + "/" + readmeconf.getReadmeName() + "." + readmeconf.getReadmeExtension());
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			String readmeline;
-			List<String> readmelines = new ArrayList<String>();
-			while ((readmeline = reader.readLine()) != null) {
-				readmelines.add(readmeline);
-			}
-			reader.close();
-			String readme = String.join("\n", readmelines);
-			Files.writeString(readmePath, readme);
+		InputStream in = config.getClass().getResourceAsStream("/data/" + modid + "/" + readmeconf.getReadmeName() + "." + readmeconf.getReadmeExtension());
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		String readmeline;
+		List<String> readmelines = new ArrayList<String>();
+		while ((readmeline = reader.readLine()) != null) {
+			readmelines.add(readmeline);
 		}
+		reader.close();
+		String readme = String.join("\n", readmelines);
+		Files.writeString(readmePath, readme);
 	}
 
 }
