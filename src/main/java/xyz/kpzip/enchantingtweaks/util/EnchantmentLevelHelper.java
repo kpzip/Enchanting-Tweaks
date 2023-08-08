@@ -21,9 +21,17 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.TridentItem;
 import net.minecraft.item.Vanishable;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 public abstract class EnchantmentLevelHelper {
+	
+	private static final String ENCHANTMENT_DESCRIPTION_KEY = "enchantment.descriptions.";
+	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden").formatted(Formatting.DARK_GRAY);
+	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden_advanced").formatted(Formatting.DARK_GRAY);
+	private static final MutableText ENCHANTMENT_DESCRIPTION_PREFIX = Text.literal("  ").formatted(Formatting.DARK_GRAY);
 	
 	private static List<ItemStack> testItems = getEnchantableItems();
 	
@@ -73,5 +81,32 @@ public abstract class EnchantmentLevelHelper {
 		}
 		return items;
 	}
+	
+	public static List<Text> getDescription(Enchantment e) {
+		String enchantmentId = EnchantmentHelper.getEnchantmentId(e).toString();
+		List<Text> description = new ArrayList<Text>();
+		MutableText line;
+		description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line1", "  No Description")));
+		for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
+		return description;
+	}
+	
+	public static List<Text> getApplicableItemsText(Enchantment e) {
+		List<Text> lines = new ArrayList<Text>();
+		MutableText line;
+		lines.add(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "applicable_to").formatted(Formatting.DARK_GRAY));
+		lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line1", "  None").formatted(Formatting.DARK_GRAY)));
+		for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
+		return lines;
+	}
+	
+	public static Text getHiddenDescriptionText() {
+		return ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT;
+	}
+	
+	public static Text getHiddenAdvancedDescriptionText() {
+		return ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT;
+	}
+	
 
 }
