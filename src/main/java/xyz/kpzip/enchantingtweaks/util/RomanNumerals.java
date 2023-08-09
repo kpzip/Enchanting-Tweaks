@@ -39,7 +39,7 @@ public abstract class RomanNumerals {
 		return str.toString();
 	}
 	
-	private record Numeral(String name, int value, Numeral nextLowest) {
+	private static record Numeral(String name, int value, Numeral nextLowest) {
 		
 		public static final Numeral NONE = (Numeral)null;
 
