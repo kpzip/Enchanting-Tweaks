@@ -16,7 +16,8 @@
   	"LightningEntityMixin",
   	"EntityMixin",
   	"TridentItemMixin",
-  	"ItemStackMixin"
+  	"ItemStackMixin",
+  	"PlayerEntityMixin"
   ],
   "client": [
   	"AnvilScreenMixin"
