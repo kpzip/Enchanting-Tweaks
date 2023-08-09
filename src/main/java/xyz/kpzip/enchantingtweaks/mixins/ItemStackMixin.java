@@ -13,10 +13,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
-import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
+import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin {
+public final class ItemStackMixin {
+	
+	private ItemStackMixin() {}
 	
 	//Only used in one method, but must be declared here since it is used in a lambda
 	@Unique
@@ -37,19 +39,19 @@ public abstract class ItemStackMixin {
             	tooltip.add(e.getName(level));
             	hasEnchantments = true;
         		if (Screen.hasShiftDown()) {
-        			tooltip.addAll(EnchantmentLevelHelper.getDescription(e));
+        			tooltip.addAll(EnchantmentTweaksHelper.getDescription(e));
         		}
         		if (Screen.hasControlDown()) {
-        			tooltip.addAll(EnchantmentLevelHelper.getApplicableItemsText(e));
+        			tooltip.addAll(EnchantmentTweaksHelper.getApplicableItemsText(e));
         		}
         		
             });
         }
         if (!Screen.hasShiftDown() && hasEnchantments) {
-        	tooltip.add(EnchantmentLevelHelper.getHiddenDescriptionText());
+        	tooltip.add(EnchantmentTweaksHelper.getHiddenDescriptionText());
         }
         if (!Screen.hasControlDown() && hasEnchantments) {
-        	tooltip.add(EnchantmentLevelHelper.getHiddenAdvancedDescriptionText());
+        	tooltip.add(EnchantmentTweaksHelper.getHiddenAdvancedDescriptionText());
         }
     }
 }

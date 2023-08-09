@@ -4,23 +4,23 @@
   "package": "xyz.kpzip.enchantingtweaks.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  	"AnvilScreenHandlerMixin",
-  	"EnchantmentHelperMixin",
-  	"EnchantRandomlyLootFunctionMixin",
-  	"EnchantBookFactoryMixin",
-  	"ItemGroupsMixin",
-  	"EnchantCommandMixin",
-  	"CrossbowItemMixin",
-  	"TridentEntityMixin",
-  	"EnchantmentMixin",
-  	"LightningEntityMixin",
-  	"EntityMixin",
+  	"EnchantmentLevelExtensionMixin$CrossbowItemMixin",
+  	"EnchantmentLevelExtensionMixin$TridentEntityMixin",
+  	"EnchantmentLevelExtensionMixin$LightningEntityMixin",
+  	"EnchantmentLevelExtensionMixin$EntityMixin",
+  	"EnchantmentLevelExtensionMixin$PlayerEntityMixin",
+  	"EnchantmentMaxLevelChangerMixin$EnchantmentHelperMixin",
+  	"EnchantmentMaxLevelChangerMixin$EnchantRandomlyLootFunctionMixin",
+  	"EnchantmentMaxLevelChangerMixin$EnchantBookFactoryMixin",
+  	"EnchantmentMaxLevelChangerMixin$ItemGroupsMixin",
+  	"EnchantmentMaxLevelChangerMixin$EnchantCommandMixin",
+  	"EnchantmentMaxLevelChangerMixin$EnchantmentMixin",
+  	"AnvilMixin$AnvilScreenHandlerMixin",
   	"TridentItemMixin",
-  	"ItemStackMixin",
-  	"PlayerEntityMixin"
+  	"ItemStackMixin"
   ],
   "client": [
-  	"AnvilScreenMixin"
+  	"AnvilMixin$AnvilScreenMixin"
   ],
   "server": [],
   "injectors": {

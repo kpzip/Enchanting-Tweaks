@@ -9,7 +9,9 @@ import net.minecraft.item.TridentItem;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
 @Mixin(TridentItem.class)
-public abstract class TridentItemMixin {
+public final class TridentItemMixin {
+	
+	private TridentItemMixin() {}
 	
 	@Redirect(method = "onStoppedUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isTouchingWaterOrRain()Z"))
 	private boolean shouldRiptideWork(PlayerEntity e) {
@@ -20,6 +22,4 @@ public abstract class TridentItemMixin {
 	private boolean shouldRiptideWork2(PlayerEntity e) {
 		return e.isTouchingWaterOrRain() || EnchantingTweaks.getConfig().allowRiptideAlways();
 	}
-
-
 }

@@ -4,10 +4,10 @@
   "package": "xyz.kpzip.enchantingtweaks.config.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  	"MixinPlayerManager"
+  	"ConfigMixin$PlayerManagerMixin"
   ],
   "client": [
-  	"MixinMinecraftClient"
+  	"ConfigMixin$MinecraftClientMixin"
   ],
   "server": [],
   "injectors": {
