@@ -15,7 +15,7 @@ import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 import xyz.kpzip.enchantingtweaks.config.ConfigWithReadme;
 import xyz.kpzip.enchantingtweaks.config.JsonHandler;
 import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
-import xyz.kpzip.enchantingtweaks.util.EnchantmentLevelHelper;
+import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
 
 public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	
@@ -154,7 +154,7 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 			for (int j = i+1; j < Registries.ENCHANTMENT.size(); j++) {
 				e1 = Registries.ENCHANTMENT.get(i);
 				e2 = Registries.ENCHANTMENT.get(j);
-				if (EnchantmentLevelHelper.canBeOnSameItem(e1, e2)) {
+				if (EnchantmentTweaksHelper.canBeOnSameItem(e1, e2)) {
 					mapping = new HashSet<String>();
 					mapping.add(EnchantmentHelper.getEnchantmentId(e1).toString());
 					mapping.add(EnchantmentHelper.getEnchantmentId(e2).toString());

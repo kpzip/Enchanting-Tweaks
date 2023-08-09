@@ -26,7 +26,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
-public abstract class EnchantmentLevelHelper {
+public abstract class EnchantmentTweaksHelper {
 	
 	private static final String ENCHANTMENT_DESCRIPTION_KEY = "enchantment.descriptions.";
 	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden").formatted(Formatting.DARK_GRAY);
