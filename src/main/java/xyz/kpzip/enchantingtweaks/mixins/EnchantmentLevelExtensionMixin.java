@@ -9,8 +9,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -20,13 +21,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -155,35 +156,16 @@ public final class EnchantmentLevelExtensionMixin {
 	@Mixin(Entity.class)
 	private static abstract class EntityMixin {
 		
-		@Shadow
-		private int fireTicks;
+		private static LightningEntity currentLightningEntity = null;
 		
-		@Shadow
-		public abstract void setFireTicks(int fireTicks);
+		@Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+		private boolean damageWithDamager(Entity self, DamageSource source, float amount) {
+			return self.damage(source, source.equals(self.getDamageSources().lightningBolt()) ? currentLightningEntity != null && currentLightningEntity instanceof Damager ? ((Damager)currentLightningEntity).getDamageAmount() : 5.0f : amount);
+		}
 		
-		@Shadow
-		public abstract void setOnFireFor(int seconds);
-		
-		@Shadow
-		public abstract DamageSources getDamageSources();
-		
-		@Shadow
-		public abstract boolean damage(DamageSource source, float amount);
-		
-		/**
-		 * @Author kpzip
-		 * @Reason allow lightning damage to be increased
-		 * TODO Overwrite: Maintain this for every update in case the original changes
-		 * */
-		@Overwrite
-		public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
-	        this.setFireTicks(this.fireTicks + 1);
-	        if (this.fireTicks == 0) {
-	            this.setOnFireFor(8);
-	        }
-	        if (lightning instanceof Damager) this.damage(this.getDamageSources().lightningBolt(), ((Damager) lightning).getDamageAmount());
-	        else this.damage(this.getDamageSources().lightningBolt(), 5.0f);
-	        
+		@Inject(method = "onStruckByLightning", at = @At("HEAD"))
+		public void onStruckByLightning(ServerWorld world, LightningEntity lightning, CallbackInfo ci) {
+			currentLightningEntity = lightning;
 	    }
 	}
 	
@@ -193,11 +175,13 @@ public final class EnchantmentLevelExtensionMixin {
 		@Unique
 		private float damageAmount = 5.0f;
 
+		@Unique
 		@Override
 		public float getDamageAmount() {
 			return damageAmount;
 		}
 
+		@Unique
 		@Override
 		public void setDamageAmount(float damage) {
 			this.damageAmount = damage;
@@ -276,10 +260,10 @@ public final class EnchantmentLevelExtensionMixin {
 	@Mixin(PlayerEntity.class)
 	private static abstract class PlayerEntityMixin {
 		
-		@Inject(method = "getBlockBreakingSpeed", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-		public void getBlockBreakingSpeed(BlockState block, CallbackInfoReturnable<Float> cir, float f) {
-			cir.setReturnValue(f * (1.0f + (0.2f * (EnchantmentHelper.getEquipmentLevel(Enchantments.AQUA_AFFINITY, ((PlayerEntity)(Object)this)) - 1))));
-			cir.cancel();
+		@Inject(method = "getBlockBreakingSpeed", at = @At("RETURN"), cancellable = true)
+		public void getBlockBreakingSpeed(BlockState block, CallbackInfoReturnable<Float> cir) {
+			if (((PlayerEntity)(Object)this).isSubmergedIn(FluidTags.WATER)) cir.setReturnValue(cir.getReturnValue() * (1.0f + (0.2f * (EnchantmentHelper.getEquipmentLevel(Enchantments.AQUA_AFFINITY, ((PlayerEntity)(Object)this)) - 1))));
+			else cir.cancel();
 		}
 	}
 }
