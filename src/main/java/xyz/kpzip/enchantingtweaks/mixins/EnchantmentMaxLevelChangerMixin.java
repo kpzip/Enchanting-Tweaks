@@ -5,7 +5,6 @@ import java.util.stream.IntStream;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,13 +28,14 @@ import net.minecraft.text.Text;
 import net.minecraft.village.TradeOffers;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
+import xyz.kpzip.enchantingtweaks.util.MixinPriority;
 import xyz.kpzip.enchantingtweaks.util.RomanNumerals;
 
 public final class EnchantmentMaxLevelChangerMixin {
 	
 	private EnchantmentMaxLevelChangerMixin() {}
 	
-	@Mixin(TradeOffers.EnchantBookFactory.class)
+	@Mixin(value = TradeOffers.EnchantBookFactory.class, priority = MixinPriority.HIGHEST)
 	private static abstract class EnchantBookFactoryMixin {
 		
 		@Redirect(method = "create", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
@@ -44,7 +44,7 @@ public final class EnchantmentMaxLevelChangerMixin {
 		}
 	}
 	
-	@Mixin(EnchantCommand.class)
+	@Mixin(value = EnchantCommand.class, priority = MixinPriority.HIGHEST)
 	private static abstract class EnchantCommandMixin {
 
 		@Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
@@ -54,7 +54,7 @@ public final class EnchantmentMaxLevelChangerMixin {
 		}
 	}
 	
-	@Mixin(EnchantmentHelper.class)
+	@Mixin(value = EnchantmentHelper.class, priority = MixinPriority.HIGHEST)
 	private static abstract class EnchantmentHelperMixin {
 		
 		@Redirect(method = "getPossibleEntries", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
@@ -63,7 +63,7 @@ public final class EnchantmentMaxLevelChangerMixin {
 		}
 	}
 	
-	@Mixin(EnchantRandomlyLootFunction.class)
+	@Mixin(value = EnchantRandomlyLootFunction.class, priority = MixinPriority.HIGHEST)
 	private static abstract class EnchantRandomlyLootFunctionMixin {
 		
 		@Redirect(method = "addEnchantmentToStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
@@ -72,16 +72,8 @@ public final class EnchantmentMaxLevelChangerMixin {
 		}
 	}
 	
-	@Mixin(ItemGroups.class)
+	@Mixin(value = ItemGroups.class, priority = MixinPriority.HIGH)
 	private static abstract class ItemGroupsMixin {
-		
-		//TODO make this work
-		/*
-		@Redirect(method = "addMaxLevelEnchantedBooks(Lnet/minecraft/item/ItemGroup$Entries;Lnet/minecraft/registry/RegistryWrapper;Ljava/util/Set;Lnet/minecraft/item/ItemGroup$StackVisibility;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
-		private static int getRealMaxLevel(Enchantment e) {
-			return EnchantmentTweaksHelper.getEnchantmentMaxLevel(e);
-		}
-		*/
 		
 		/**
 		 * @Author kpzip
@@ -94,8 +86,6 @@ public final class EnchantmentMaxLevelChangerMixin {
 	        .map(enchantment -> EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry((Enchantment)enchantment, EnchantmentTweaksHelper.getEnchantmentMaxLevel(enchantment))))
 	        .forEach(stack -> entries.add((ItemStack)stack, visibility));
 	    }
-		
-		//private static void addMaxLevelEnchantedBooks(ItemGroup.Entries entries, RegistryWrapper<Enchantment> registryWrapper, Set<EnchantmentTarget> enchantmentTargets, ItemGroup.StackVisibility visibility) {}
 
 		/**
 		 * @Author kpzip
@@ -121,30 +111,25 @@ public final class EnchantmentMaxLevelChangerMixin {
 		}
 	}
 	
-	@Mixin(Enchantment.class)
+	@Mixin(value = Enchantment.class, priority = MixinPriority.LOWEST)
 	private static abstract class EnchantmentMixin {
-
-		@Shadow public abstract String getTranslationKey();
-		
-		@Shadow public abstract boolean isCursed();
 		
 		@Unique
-		private static int currentLevel = 0;
+		private static int currentLevel = -1;
 		
 		@Redirect(method = "getName", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/text/MutableText;append(Lnet/minecraft/text/Text;)Lnet/minecraft/text/MutableText;"))
 		private MutableText appendNumeral(MutableText enchantmentName, Text useless) {
-			return enchantmentName.append(Text.of(RomanNumerals.getNumeral(currentLevel)));
+			return enchantmentName.append(Text.of(RomanNumerals.getNumeral(Math.max(1, currentLevel))));
 		}
 		
 		@Inject(method = "getName", at = @At("HEAD"))
-		public void getName(int level, CallbackInfoReturnable<Text> cir) {
+		public void getNameHead(int level, CallbackInfoReturnable<Text> cir) {
 			currentLevel = level;
 		}
 		
-		@Redirect(method = "canCombine", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;canAccept(Lnet/minecraft/enchantment/Enchantment;)Z"))
-		private boolean acautallyCanAccept(Enchantment e1, Enchantment e2) {
-			return EnchantmentTweaksHelper.canCombine(e1, e2);
+		@Inject(method = "getName", at = @At("RETURN"))
+		public void getNameReturn(int level, CallbackInfoReturnable<Text> cir) {
+			currentLevel = -1;
 		}
-
 	}
 }

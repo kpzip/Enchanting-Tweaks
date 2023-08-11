@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -26,7 +28,6 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -39,89 +40,58 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.kpzip.enchantingtweaks.util.Damager;
+import xyz.kpzip.enchantingtweaks.util.MixinPriority;
 
 public final class EnchantmentLevelExtensionMixin {
 	
 	private EnchantmentLevelExtensionMixin() {}
 
-	@Mixin(CrossbowItem.class)
+	@Mixin(value = CrossbowItem.class, priority = MixinPriority.LOW)
 	private static abstract class CrossbowItemMixin {
 		
-		@Shadow
-		private static final String CHARGED_PROJECTILES_KEY = "ChargedProjectiles";
+		@ModifyVariable(method = "loadProjectiles(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)Z", at = @At("STORE"), ordinal = 0)
+		private static int getArrowAmount(int vanillaArrowAmount, LivingEntity shooter, ItemStack crossbow) {
+			return 1 + 2 * EnchantmentHelper.getLevel(Enchantments.MULTISHOT, crossbow);
+		}
 		
-		@Shadow
-		private static boolean loadProjectile(LivingEntity shooter, ItemStack crossbow, ItemStack projectile, boolean simulated, boolean creative) { return true; }
-		
-		/**
-		 * @Author kpzip
-		 * @Reason add compatibility for loading more than 3 projectiles
-		 * TODO Overwrite: Maintain this for every update in case the original changes
-		 * */
-		@Overwrite
-		private static boolean loadProjectiles(LivingEntity shooter, ItemStack crossbow) {
-	        int i = EnchantmentHelper.getLevel(Enchantments.MULTISHOT, crossbow);
-	        int j = 1 + 2*i;
-	        boolean bl = shooter instanceof PlayerEntity && ((PlayerEntity)shooter).getAbilities().creativeMode;
-	        ItemStack itemStack = shooter.getProjectileType(crossbow);
-	        ItemStack itemStack2 = itemStack.copy();
-	        for (int k = 0; k < j; ++k) {
-	            if (k > 0) {
-	                itemStack = itemStack2.copy();
-	            }
-	            if (itemStack.isEmpty() && bl) {
-	                itemStack = new ItemStack(Items.ARROW);
-	                itemStack2 = itemStack.copy();
-	            }
-	            if (loadProjectile(shooter, crossbow, itemStack, k > 0, bl)) continue;
-	            return false;
+		@Unique
+		private static float[] getSoundPitchesUnlimited(Random random, int size) {
+	        boolean bl = random.nextBoolean();
+	        float[] pitches = new float[size];
+	        pitches[0] = 1.0f;
+	        for (int i = 1; i < pitches.length; ++i) {
+	        	getSoundPitch(bl, random);
+	        	bl = !bl;
 	        }
-	        return true;
+	        return pitches;
 	    }
 		
-		@Shadow
-		private static List<ItemStack> getProjectiles(ItemStack stack) { return new ArrayList<ItemStack>(); }
+		@Inject(method = "getProjectiles(Lnet/minecraft/item/ItemStack;)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
+		private static void makeGetProjectilesNullSafe(ItemStack i, CallbackInfoReturnable<List<ItemStack>> cir) {
+			if (i == null || i == ItemStack.EMPTY) cir.setReturnValue(new ArrayList<ItemStack>());
+		}
+		
+		@Inject(method = "shootAll(Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;FF)V", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/CrossbowItem;getProjectiles(Lnet/minecraft/item/ItemStack;)Ljava/util/List;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+		private static void shootEachProjectile(World world, LivingEntity entity, Hand hand, ItemStack stack, float speed, float divergence, CallbackInfo ci, List<ItemStack> list) {
+			float[] fs = getSoundPitchesUnlimited(entity.getRandom(), list.size());
+			for (int i = 0; i < list.size(); ++i) {
+	            boolean creative = entity instanceof PlayerEntity && ((PlayerEntity)entity).getAbilities().creativeMode;
+	            ItemStack itemStack = list.get(i);
+	            
+	            if (itemStack.isEmpty()) continue;
+	            
+	            shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, getArrowSpread(i, list.size()));
+	            
+	        }
+	        postShoot(world, entity, stack);
+	        ci.cancel();
+		}
 		
 		@Shadow
 		private static void shoot(World world, LivingEntity shooter, Hand hand, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean creative, float speed, float divergence, float simulated) {}
 		
 		@Shadow
 		private static void postShoot(World world, LivingEntity entity, ItemStack stack) {}
-		
-		/**
-		 * @Author kpzip
-		 * @Reason add compatibility for loading more than 3 projectiles
-		 * TODO Overwrite: Maintain this for every update in case the original changes
-		 * */
-		@Overwrite
-		public static void shootAll(World world, LivingEntity entity, Hand hand, ItemStack stack, float speed, float divergence) {
-	        List<ItemStack> list = getProjectiles(stack);
-	        float[] fs = getSounds(entity.getRandom(), list.size());
-	        for (int i = 0; i < list.size()/* && i <= 19*/; ++i) {
-	        	
-	            boolean creative = entity instanceof PlayerEntity && ((PlayerEntity)entity).getAbilities().creativeMode;
-	            
-	            ItemStack itemStack = list.get(i);
-	            if (itemStack.isEmpty()) continue;
-	            
-	            shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, getArrowSpread(i, list.size() > 19 ? 19 : list.size()));
-	            /*
-	            if (i == 0) {
-	                shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, 0.0f);
-	                continue;
-	            }
-	            if (i == 1) {
-	                shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, -10.0f);
-	                continue;
-	            }
-	            if (i != 2) continue;
-	            shoot(world, entity, hand, stack, itemStack, fs[i], creative, speed, divergence, 10.0f);
-	            */
-	            
-	            
-	        }
-	        postShoot(world, entity, stack);
-	    }
 		
 		@Unique
 		private static float getArrowSpread(int arrowNum, int maxArrows) {
@@ -135,41 +105,34 @@ public final class EnchantmentLevelExtensionMixin {
 			if (arrowNum%2 == 1) return -spread; else return spread;
 		}
 		
-		//TODO This is kind of an overwrite: Maintain this for every update in case the original changes (marked as @unique since the parameters needed to be changed)
-		@Unique
-		private static float[] getSounds(Random random, int len) {
-	        boolean bl = random.nextBoolean();
-	        float[] pitches = new float[len];
-	        pitches[0] = 1.0f;
-	        for (int i = 1; i < pitches.length; ++i) {
-	        	getSoundPitch(bl, random);
-	        	bl = !bl;
-	        }
-	        return pitches;
-	    }
-		
 		@Shadow
 	    private static float getSoundPitch(boolean flag, Random random) {return 0.0f;}
 
 	}
 	
-	@Mixin(Entity.class)
+	@Mixin(value = Entity.class, priority = MixinPriority.HIGH)
 	private static abstract class EntityMixin {
 		
+		@Unique
 		private static LightningEntity currentLightningEntity = null;
 		
-		@Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+		@Redirect(method = "onStruckByLightning(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LightningEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
 		private boolean damageWithDamager(Entity self, DamageSource source, float amount) {
 			return self.damage(source, source.equals(self.getDamageSources().lightningBolt()) ? currentLightningEntity != null && currentLightningEntity instanceof Damager ? ((Damager)currentLightningEntity).getDamageAmount() : 5.0f : amount);
 		}
 		
-		@Inject(method = "onStruckByLightning", at = @At("HEAD"))
-		public void onStruckByLightning(ServerWorld world, LightningEntity lightning, CallbackInfo ci) {
+		@Inject(method = "onStruckByLightning(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LightningEntity;)V", at = @At("HEAD"))
+		public void onStruckByLightningHead(ServerWorld world, LightningEntity lightning, CallbackInfo ci) {
 			currentLightningEntity = lightning;
+	    }
+		
+		@Inject(method = "onStruckByLightning(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LightningEntity;)V", at = @At("RETURN"))
+		public void onStruckByLightningTail(ServerWorld world, LightningEntity lightning, CallbackInfo ci) {
+			currentLightningEntity = null;
 	    }
 	}
 	
-	@Mixin(LightningEntity.class)
+	@Mixin(value = LightningEntity.class, priority = MixinPriority.DEFAULT)
 	private static abstract class LightningEntityMixin implements Damager {
 		
 		@Unique
@@ -188,7 +151,7 @@ public final class EnchantmentLevelExtensionMixin {
 		}
 	}
 	
-	@Mixin(TridentEntity.class)
+	@Mixin(value = TridentEntity.class, priority = MixinPriority.LOWEST)
 	private static abstract class TridentEntityMixin extends PersistentProjectileEntity{
 		
 		protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, double x, double y, double z, World world) {
@@ -196,44 +159,14 @@ public final class EnchantmentLevelExtensionMixin {
 		}
 		
 		@Shadow
-		boolean dealtDamage;
-		
-		@Shadow
 		private ItemStack tridentStack;
-
-		/**
-		 * @Author kpzip
-		 * @Reason allow channeling tridents to strike multiple times and deal more damage with increasing levels.
-		 * TODO Overwrite: Maintain this for every update in case the original changes
-		 * */
-		@Overwrite
-		@Override
-	    public void onEntityHit(EntityHitResult entityHitResult) {
-	        Entity entity = entityHitResult.getEntity();
-	        float f = 8.0f;
-	        if (entity instanceof LivingEntity) {
-	            LivingEntity livingEntity = (LivingEntity)entity;
-	            f += EnchantmentHelper.getAttackDamage(this.tridentStack, livingEntity.getGroup());
-	        }
-	        Entity entity2 = this.getOwner();
-	        DamageSource damageSource = this.getDamageSources().trident(this, entity2 == null ? this : entity2);
-	        this.dealtDamage = true;
-	        SoundEvent soundEvent = SoundEvents.ITEM_TRIDENT_HIT;
-	        if (entity.damage(damageSource, f)) {
-	            if (entity.getType() == EntityType.ENDERMAN) {
-	                return;
-	            }
-	            if (entity instanceof LivingEntity) {
-	                LivingEntity livingEntity2 = (LivingEntity)entity;
-	                if (entity2 instanceof LivingEntity) {
-	                    EnchantmentHelper.onUserDamaged(livingEntity2, entity2);
-	                    EnchantmentHelper.onTargetDamaged((LivingEntity)entity2, livingEntity2);
-	                }
-	                this.onHit(livingEntity2);
-	            }
-	        }
-	        this.setVelocity(this.getVelocity().multiply(-0.01, -0.1, -0.01));
-	        float g = 1.0f;
+		
+		@Inject(method = "onEntityHit(Lnet/minecraft/util/hit/EntityHitResult;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/TridentEntity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V", shift = Shift.AFTER), cancellable = true)
+		private void onEntityHit(EntityHitResult result, CallbackInfo ci) {
+			Entity entity = result.getEntity();
+			Entity entity2 = this.getOwner();
+			SoundEvent soundEvent = SoundEvents.ITEM_TRIDENT_HIT;
+			float g = 1.0f;
 	        if (this.getWorld() instanceof ServerWorld && this.getWorld().isThundering() && ((TridentEntity)(Object)this).hasChanneling()) {
 	        	int channeling = EnchantmentHelper.getLevel(Enchantments.CHANNELING, tridentStack);
 	            LightningEntity lightningEntity;
@@ -254,10 +187,11 @@ public final class EnchantmentLevelExtensionMixin {
 	            }
 	        }
 	        this.playSound(soundEvent, g, 1.0f);
-	    }
+	        ci.cancel();
+		}
 	}
 	
-	@Mixin(PlayerEntity.class)
+	@Mixin(value = PlayerEntity.class, priority = MixinPriority.HIGHEST)
 	private static abstract class PlayerEntityMixin {
 		
 		@Inject(method = "getBlockBreakingSpeed", at = @At("RETURN"), cancellable = true)

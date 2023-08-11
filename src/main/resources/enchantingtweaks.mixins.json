@@ -15,9 +15,11 @@
   	"EnchantmentMaxLevelChangerMixin$ItemGroupsMixin",
   	"EnchantmentMaxLevelChangerMixin$EnchantCommandMixin",
   	"EnchantmentMaxLevelChangerMixin$EnchantmentMixin",
-  	"AnvilMixin$AnvilScreenHandlerMixin",
-  	"TridentItemMixin",
-  	"ItemStackMixin"
+  	"EnchantmentTooltipMixin$ItemStackMixin",
+  	"EnchantmentTooltipMixin$EnchantmentMixin",
+  	"InjectedSettingsMixin$TridentItemMixin",
+  	"InjectedSettingsMixin$AnvilScreenHandlerMixin",
+  	"AnvilMixin$AnvilScreenHandlerMixin"
   ],
   "client": [
   	"AnvilMixin$AnvilScreenMixin"
