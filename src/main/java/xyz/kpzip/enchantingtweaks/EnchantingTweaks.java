@@ -15,7 +15,7 @@ public class EnchantingTweaks implements ModInitializer {
 	
 	public static final String MOD_ID = "enchantingtweaks";
 	//Change mod version in fabric.mod.json and in gradle.properties
-	public static final String MOD_VERSION = "1.1.0";
+	public static final String MOD_VERSION = "1.1.1";
 	private static final EnchantingTweaksConfig CONFIG = new EnchantingTweaksConfig().reloadFromFile();
 	
 	@Override
