@@ -38,8 +38,8 @@ public final class EnchantmentTweaksHelper {
 	
 	private static final MutableText ENCHANTMENT_DESCRIPTION_PREFIX = Text.literal("  ").formatted(Formatting.DARK_GRAY);
 	
-	public static final String DESCRIPTION_FALLBACK = "§8No Description";
-	public static final String APPLICABILITY_FALLBACK = "§8-None";
+	public static final String DESCRIPTION_FALLBACK = "No Description";
+	public static final String APPLICABILITY_FALLBACK = "-None";
 	
 	private static List<ItemStack> testItems = getEnchantableItems();
 	
