@@ -26,11 +26,16 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 
-public abstract class EnchantmentTweaksHelper {
+public final class EnchantmentTweaksHelper {
+	
+	private EnchantmentTweaksHelper() {}
 	
 	private static final String ENCHANTMENT_DESCRIPTION_KEY = "enchantment.descriptions.";
+	
 	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden").formatted(Formatting.DARK_GRAY);
 	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden_advanced").formatted(Formatting.DARK_GRAY);
+	private static final Text ENCHANTMENT_EXCLUSIVITY_HIDDEN_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden_exclusive").formatted(Formatting.DARK_GRAY);
+	
 	private static final MutableText ENCHANTMENT_DESCRIPTION_PREFIX = Text.literal("  ").formatted(Formatting.DARK_GRAY);
 	
 	public static final String DESCRIPTION_FALLBACK = "§8No Description";
@@ -85,11 +90,33 @@ public abstract class EnchantmentTweaksHelper {
 		return items;
 	}
 	
+	private static List<Enchantment> getExclusiveEnchantments(Enchantment e) {
+		List<Enchantment> exclusives = new ArrayList<Enchantment>();
+		for (Set<String> enchantments : EnchantingTweaks.getConfig().getExclusivity().keySet()) {
+			if (enchantments.contains(EnchantmentHelper.getEnchantmentId(e).toString()) && !EnchantingTweaks.getConfig().getExclusivity().get(enchantments)) {
+				for (String s : enchantments) {
+					if (s.equals(EnchantmentHelper.getEnchantmentId(e).toString())) {
+						continue;
+					}
+					Enchantment exclusive = null;
+					for (Enchantment en : Registries.ENCHANTMENT) {
+						if (EnchantmentHelper.getEnchantmentId(en).toString().equals(s)) {
+							exclusive = en;
+							break;
+						}
+					}
+					exclusives.add(exclusive);
+				}
+			}
+		}
+		return exclusives;
+	}
+	
 	public static List<Text> getDescription(Enchantment e) {
 		String enchantmentId = EnchantmentHelper.getEnchantmentId(e).toString();
 		List<Text> description = new ArrayList<Text>();
 		MutableText line;
-		description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line1"/*, DESCRIPTION_FALLBACK*/)));
+		description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line1", DESCRIPTION_FALLBACK)));
 		for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
 		return description;
 	}
@@ -103,8 +130,20 @@ public abstract class EnchantmentTweaksHelper {
 			for (int i = 2; (line = CustomApplicabilityTooltipProvider.getApplicabilityTooltipLine((CustomApplicabilityTooltipProvider)e, i)).asTruncatedString(1) != "" && i < 10; i++) lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
 		}
 		else {
-			lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line1"/*, APPLICABILITY_FALLBACK*/)));
+			lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line1", APPLICABILITY_FALLBACK)));
 			for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
+		}
+		return lines;
+	}
+	
+	public static List<Text> getExclusivityText(Enchantment e) {
+		List<Text> lines = new ArrayList<Text>();
+		List<Enchantment> exclusives = getExclusiveEnchantments(e);
+		if (!exclusives.isEmpty()) {
+			lines.add(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "exclusive_to").formatted(Formatting.DARK_GRAY));
+			for (Enchantment en : exclusives) {
+				lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(en.getTranslationKey())));
+			}
 		}
 		return lines;
 	}
@@ -115,6 +154,10 @@ public abstract class EnchantmentTweaksHelper {
 	
 	public static Text getHiddenAdvancedDescriptionText() {
 		return ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT;
+	}
+	
+	public static Text getHiddenExclusivityText() {
+		return ENCHANTMENT_EXCLUSIVITY_HIDDEN_TEXT;
 	}
 	
 

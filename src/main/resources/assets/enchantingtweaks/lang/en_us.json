@@ -1,7 +1,9 @@
 {
 	"enchantment.descriptions.hidden": "Press Shift to view enchantment descriptions",
 	"enchantment.descriptions.hidden_advanced": "Press Ctrl to view applicable items",
+	"enchantment.descriptions.hidden_exclusive": "Press Alt to view combination info",
 	"enchantment.descriptions.applicable_to": "Applicable to:",
+	"enchantment.descriptions.exclusive_to": "Cannot be combined with:",
 	
 	"enchantment.numerals.i": "I",
 	"enchantment.numerals.iv": "IV",

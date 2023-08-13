@@ -49,6 +49,9 @@ public final class EnchantmentTooltipMixin {
 	        		if (Screen.hasControlDown()) {
 	        			tooltip.addAll(EnchantmentTweaksHelper.getApplicableItemsText(e));
 	        		}
+	        		if (Screen.hasAltDown()) {
+	        			tooltip.addAll(EnchantmentTweaksHelper.getExclusivityText(e));
+	        		}
 	        		
 	            });
 	        }
@@ -57,6 +60,9 @@ public final class EnchantmentTooltipMixin {
 	        }
 	        if (!Screen.hasControlDown() && hasEnchantments) {
 	        	tooltip.add(EnchantmentTweaksHelper.getHiddenAdvancedDescriptionText());
+	        }
+	        if (!Screen.hasAltDown() && hasEnchantments) {
+	        	tooltip.add(EnchantmentTweaksHelper.getHiddenExclusivityText());
 	        }
 	    }
 	}
