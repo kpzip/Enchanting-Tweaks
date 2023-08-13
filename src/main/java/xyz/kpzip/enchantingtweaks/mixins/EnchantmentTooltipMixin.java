@@ -5,12 +5,9 @@ import java.util.List;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.enchantment.DamageEnchantment;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -62,15 +59,6 @@ public final class EnchantmentTooltipMixin {
 	        	tooltip.add(EnchantmentTweaksHelper.getHiddenAdvancedDescriptionText());
 	        }
 	    }
-	}
-	
-	@Mixin(value = Enchantment.class, priority = MixinPriority.HIGHEST)
-	private static abstract class EnchantmentMixin {
-		
-		@Redirect(method = "canCombine", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;canAccept(Lnet/minecraft/enchantment/Enchantment;)Z"))
-		private boolean acautallyCanAccept(Enchantment e1, Enchantment e2) {
-			return EnchantmentTweaksHelper.canCombine(e1, e2);
-		}
 	}
 	
 	@Mixin(value = DamageEnchantment.class, priority = MixinPriority.DEFAULT)

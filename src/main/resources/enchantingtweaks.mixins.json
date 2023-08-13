@@ -16,10 +16,10 @@
   	"EnchantmentMaxLevelChangerMixin$EnchantCommandMixin",
   	"EnchantmentMaxLevelChangerMixin$EnchantmentMixin",
   	"EnchantmentTooltipMixin$ItemStackMixin",
-  	"EnchantmentTooltipMixin$EnchantmentMixin",
   	"EnchantmentTooltipMixin$DamageEnchantmentMixin",
   	"InjectedSettingsMixin$TridentItemMixin",
   	"InjectedSettingsMixin$AnvilScreenHandlerMixin",
+  	"InjectedSettingsMixin$EnchantmentMixin",
   	"AnvilMixin$AnvilScreenHandlerMixin"
   ],
   "client": [

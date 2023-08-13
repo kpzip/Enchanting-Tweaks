@@ -4,11 +4,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.TridentItem;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
+import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
 import xyz.kpzip.enchantingtweaks.util.MixinPriority;
 
 public final class InjectedSettingsMixin {
@@ -44,6 +46,15 @@ public final class InjectedSettingsMixin {
 		@Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isTouchingWaterOrRain()Z"))
 		private boolean shouldRiptideWork2(PlayerEntity e) {
 			return e.isTouchingWaterOrRain() || EnchantingTweaks.getConfig().allowRiptideAlways();
+		}
+	}
+	
+	@Mixin(value = Enchantment.class, priority = MixinPriority.HIGHEST)
+	private static abstract class EnchantmentMixin {
+		
+		@Redirect(method = "canCombine", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;canAccept(Lnet/minecraft/enchantment/Enchantment;)Z"))
+		private boolean acautallyCanAccept(Enchantment e1, Enchantment e2) {
+			return EnchantmentTweaksHelper.canCombine(e1, e2);
 		}
 	}
 
