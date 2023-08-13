@@ -33,6 +33,9 @@ public abstract class EnchantmentTweaksHelper {
 	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden_advanced").formatted(Formatting.DARK_GRAY);
 	private static final MutableText ENCHANTMENT_DESCRIPTION_PREFIX = Text.literal("  ").formatted(Formatting.DARK_GRAY);
 	
+	public static final String DESCRIPTION_FALLBACK = "§8No Description";
+	public static final String APPLICABILITY_FALLBACK = "§8-None";
+	
 	private static List<ItemStack> testItems = getEnchantableItems();
 	
 	public static int getEnchantmentMaxLevel(Enchantment e) {
@@ -86,7 +89,7 @@ public abstract class EnchantmentTweaksHelper {
 		String enchantmentId = EnchantmentHelper.getEnchantmentId(e).toString();
 		List<Text> description = new ArrayList<Text>();
 		MutableText line;
-		description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line1", "  No Description")));
+		description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line1"/*, DESCRIPTION_FALLBACK*/)));
 		for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + enchantmentId + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) description.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
 		return description;
 	}
@@ -95,8 +98,14 @@ public abstract class EnchantmentTweaksHelper {
 		List<Text> lines = new ArrayList<Text>();
 		MutableText line;
 		lines.add(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "applicable_to").formatted(Formatting.DARK_GRAY));
-		lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line1", "  None").formatted(Formatting.DARK_GRAY)));
-		for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
+		if (e instanceof CustomApplicabilityTooltipProvider) {
+			lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(CustomApplicabilityTooltipProvider.getFirstApplicabilityTooltipLine((CustomApplicabilityTooltipProvider)e)));
+			for (int i = 2; (line = CustomApplicabilityTooltipProvider.getApplicabilityTooltipLine((CustomApplicabilityTooltipProvider)e, i)).asTruncatedString(1) != "" && i < 10; i++) lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
+		}
+		else {
+			lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line1"/*, APPLICABILITY_FALLBACK*/)));
+			for (int i = 2; (line = Text.translatableWithFallback(ENCHANTMENT_DESCRIPTION_KEY + "applicable." + e.target.toString().toLowerCase() + ".line" + String.valueOf(i), "")).asTruncatedString(1) != "" && i < 10; i++) lines.add(ENCHANTMENT_DESCRIPTION_PREFIX.copy().append(line));
+		}
 		return lines;
 	}
 	

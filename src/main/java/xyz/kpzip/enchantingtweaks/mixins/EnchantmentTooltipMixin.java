@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import xyz.kpzip.enchantingtweaks.util.CustomApplicabilityTooltipProvider;
 import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
 import xyz.kpzip.enchantingtweaks.util.MixinPriority;
 
@@ -68,6 +70,15 @@ public final class EnchantmentTooltipMixin {
 		@Redirect(method = "canCombine", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;canAccept(Lnet/minecraft/enchantment/Enchantment;)Z"))
 		private boolean acautallyCanAccept(Enchantment e1, Enchantment e2) {
 			return EnchantmentTweaksHelper.canCombine(e1, e2);
+		}
+	}
+	
+	@Mixin(value = DamageEnchantment.class, priority = MixinPriority.DEFAULT)
+	private static abstract class DamageEnchantmentMixin implements CustomApplicabilityTooltipProvider {
+		
+		@Override
+		public String getApplicabilityTooltipTranslationKey() {
+			return CustomApplicabilityTooltipProvider.TRANSLATION_KEY_PREFIX + ".sword_or_axe";
 		}
 	}
 }
