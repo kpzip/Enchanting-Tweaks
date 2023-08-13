@@ -2,6 +2,9 @@ package xyz.kpzip.enchantingtweaks.util;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+
 public abstract class RomanNumerals {
 	
 	private static final Numeral I = new Numeral("I", 1, Numeral.NONE);
@@ -19,29 +22,36 @@ public abstract class RomanNumerals {
 	private static final Numeral M = new Numeral("M", 1000, CM);
 	
 	@Nullable
-	public static String getNumeral(int number) {
+	public static Text getNumeral(int number) {
 		Numeral currentNumeral = M;
-		StringBuilder str = new StringBuilder();
-		if (number > M.value) {
-			str.append(M.name.repeat((int)(number/M.value)));
-			number %= M.value;
+		MutableText text = Text.empty();
+		if (number > currentNumeral.value) {
+			int numMs = (int)(number/currentNumeral.value);
+			for (int i = 0; i < numMs; i++) {
+				text.append(currentNumeral.getTranslatedText());
+			}
+			number %= currentNumeral.value;
 		}
 		while (number > 0) {
 			if (currentNumeral.value() > number) {
 				currentNumeral = currentNumeral.nextLowest();
 				continue;
 			}
-			else {
-				number -= currentNumeral.value();
-				str.append(currentNumeral.name());
-			}
+			number -= currentNumeral.value();
+			text.append(currentNumeral.getTranslatedText());
 		}
-		return str.toString();
+		return text;
 	}
 	
 	private static record Numeral(String name, int value, Numeral nextLowest) {
 		
+		private static final String TRANSLATION_KEY = "enchantment.numerals.";
+		
 		public static final Numeral NONE = (Numeral)null;
+		
+		public Text getTranslatedText() {
+			return Text.translatableWithFallback(TRANSLATION_KEY + name.toLowerCase(), name);
+		}
 
 	}
 }

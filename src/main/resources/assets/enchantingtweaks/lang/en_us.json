@@ -1,7 +1,21 @@
-{ 
+{
 	"enchantment.descriptions.hidden": "Press Shift to view enchantment descriptions",
 	"enchantment.descriptions.hidden_advanced": "Press Ctrl to view applicable items",
 	"enchantment.descriptions.applicable_to": "Applicable to:",
+	
+	"enchantment.numerals.i": "I",
+	"enchantment.numerals.iv": "IV",
+	"enchantment.numerals.v": "V",
+	"enchantment.numerals.ix": "IX",
+	"enchantment.numerals.x": "X",
+	"enchantment.numerals.xl": "XL",
+	"enchantment.numerals.l": "L",
+	"enchantment.numerals.xc": "XC",
+	"enchantment.numerals.c": "C",
+	"enchantment.numerals.cd": "CD",
+	"enchantment.numerals.d": "D",
+	"enchantment.numerals.cm": "CM",
+	"enchantment.numerals.m": "M",
 	
 	"enchantment.descriptions.applicable.armor.line1": "§8-Helmets",
 	"enchantment.descriptions.applicable.armor.line2": "§8-Chestplates",

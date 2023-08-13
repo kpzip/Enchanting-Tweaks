@@ -119,7 +119,7 @@ public final class EnchantmentMaxLevelChangerMixin {
 		
 		@Redirect(method = "getName", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/text/MutableText;append(Lnet/minecraft/text/Text;)Lnet/minecraft/text/MutableText;"))
 		private MutableText appendNumeral(MutableText enchantmentName, Text useless) {
-			return enchantmentName.append(Text.of(RomanNumerals.getNumeral(Math.max(1, currentLevel))));
+			return enchantmentName.append(RomanNumerals.getNumeral(Math.max(1, currentLevel)));
 		}
 		
 		@Inject(method = "getName", at = @At("HEAD"))
