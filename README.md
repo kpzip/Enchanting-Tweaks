@@ -7,6 +7,7 @@ Highly configurable tweaks to the enchanting system include:
 - Ability to allow "exclusive" enchantments to be combined (e.x. Infinity & Mending)
 - Ability to change the maximum level allowed for enchantments
 - Support for enchantments added by other mods
+- Enchantment Descriptions \(Hold Shift\)
 
 # Installation & Usage
 
