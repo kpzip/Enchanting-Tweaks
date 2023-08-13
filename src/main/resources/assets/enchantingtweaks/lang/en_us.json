@@ -94,7 +94,7 @@
 	"enchantment.descriptions.minecraft:riptide.line3": "§8-Trident cannot be thrown §7Outside of Water §8and in §eSunny Weather.",
 	"enchantment.descriptions.minecraft:channeling.line1": "§8-Upon hitting an enemy exposed to the sky during a thunderstorm,",
 	"enchantment.descriptions.minecraft:channeling.line2": "§8strike them with 1 §7(+1 per additional level) §f§lLightning Bolt.",
-	"enchantment.descriptions.minecraft:channeling.line3": "§8-§f§lLightning bolt(s) §8deal 5 §7(+5 per additional level) damage.",
+	"enchantment.descriptions.minecraft:channeling.line3": "§8-§f§lLightning bolt(s) §8deal 5 §7(+5 per additional level) §8damage.",
 	"enchantment.descriptions.minecraft:multishot.line1": "§8-Fire 2 §7(+2 per additional level) §bExtra Arrows §8per shot.",
 	"enchantment.descriptions.minecraft:multishot.line2": "§8-§bExtra Arrows §8are free.",
 	"enchantment.descriptions.minecraft:quick_charge.line1": "§8-Decrease §eReload Time §8by 0.25 seconds §7(-0.25 seconds per additional level).",
