@@ -14,7 +14,7 @@ public class EnchantingTweaks implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("enchantingtweaks");
 	
 	public static final String MOD_ID = "enchantingtweaks";
-	//Change mod version in fabric.mod.json and in gradle.properties
+	//Change mod version in fabric.mod.json, in gradle.properties, and in publish.yml, and update CHANGELOG.md
 	public static final String MOD_VERSION = "1.2.0";
 	private static final EnchantingTweaksConfig CONFIG = new EnchantingTweaksConfig().reloadFromFile();
 	
