@@ -15,7 +15,6 @@
   	"EnchantmentMaxLevelChangerMixin$ItemGroupsMixin",
   	"EnchantmentMaxLevelChangerMixin$EnchantCommandMixin",
   	"EnchantmentMaxLevelChangerMixin$EnchantmentMixin",
-  	"EnchantmentTooltipMixin$ItemStackMixin",
   	"EnchantmentTooltipMixin$DamageEnchantmentMixin",
   	"InjectedSettingsMixin$TridentItemMixin",
   	"InjectedSettingsMixin$AnvilScreenHandlerMixin",
@@ -23,7 +22,8 @@
   	"AnvilMixin$AnvilScreenHandlerMixin"
   ],
   "client": [
-  	"AnvilMixin$AnvilScreenMixin"
+  	"AnvilMixin$AnvilScreenMixin",
+  	"EnchantmentTooltipMixin$ItemStackMixin"
   ],
   "server": [],
   "injectors": {
