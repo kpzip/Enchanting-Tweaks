@@ -8,6 +8,7 @@ Highly configurable tweaks to the enchanting system include:
 - Ability to change the maximum level allowed for enchantments
 - Support for enchantments added by other mods
 - Full Feature List: [here](https://github.com/kpzip/Enchanting-Tweaks/wiki/Full-Feature-List)
+- Enchantment Descriptions \(Hold Shift\)
 
 # Installation & Usage
 
