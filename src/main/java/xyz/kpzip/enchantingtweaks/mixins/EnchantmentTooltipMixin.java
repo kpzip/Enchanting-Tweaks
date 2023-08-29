@@ -6,6 +6,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -22,6 +24,7 @@ public final class EnchantmentTooltipMixin {
 
 	private EnchantmentTooltipMixin() {}
 	
+	@Environment(value=EnvType.CLIENT)
 	@Mixin(value = ItemStack.class, priority = MixinPriority.LOW)
 	public static abstract class ItemStackMixin {
 		
