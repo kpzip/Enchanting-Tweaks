@@ -16,6 +16,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
 import xyz.kpzip.enchantingtweaks.util.CustomApplicabilityTooltipProvider;
 import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
 import xyz.kpzip.enchantingtweaks.util.MixinPriority;
@@ -58,13 +59,13 @@ public final class EnchantmentTooltipMixin {
 	        		
 	            });
 	        }
-	        if (!Screen.hasShiftDown() && hasEnchantments) {
+	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Screen.hasShiftDown() && hasEnchantments) {
 	        	tooltip.add(EnchantmentTweaksHelper.getHiddenDescriptionText());
 	        }
-	        if (!Screen.hasControlDown() && hasEnchantments) {
+	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Screen.hasControlDown() && hasEnchantments && Screen.hasShiftDown()) {
 	        	tooltip.add(EnchantmentTweaksHelper.getHiddenAdvancedDescriptionText());
 	        }
-	        if (!Screen.hasAltDown() && hasEnchantments) {
+	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Screen.hasAltDown() && hasEnchantments && Screen.hasShiftDown()) {
 	        	tooltip.add(EnchantmentTweaksHelper.getHiddenExclusivityText());
 	        }
 	    }

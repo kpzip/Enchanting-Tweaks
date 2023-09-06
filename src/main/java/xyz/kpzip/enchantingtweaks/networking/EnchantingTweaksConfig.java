@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -27,6 +29,10 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	private boolean showAllLevelEnchantedBooksInCreativeInventory = true;
 	private boolean enchantmentCommandAbidesByMaxLevel = false;
 	private boolean allowRiptideAlways = false;
+	
+	//Client only
+	@Environment(EnvType.CLIENT)
+	private boolean showDescriptionHints = true;
 	
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
 	private Map<Set<String>, Boolean> exclusivity = getExclusivity(new HashMap<Set<String>, Boolean>());
@@ -98,6 +104,11 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 		this.enchantmentCommandAbidesByMaxLevel = readcfg.enchantmentCommandAbidesByMaxLevel();
 		this.allowRiptideAlways = readcfg.allowRiptideAlways();
 		
+		//Client Only Code
+		if () {
+			this.showDescriptionHints = readcfg.showDescriptionHints();
+		}
+		
 		this.maxLevels = readcfg.maxLevels;
 		//addAllEnchantments(this.maxLevels);
 		
@@ -126,6 +137,11 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	
 	public boolean allowRiptideAlways() {
 		return allowRiptideAlways;
+	}
+	
+	@Environment(EnvType.CLIENT)
+	public boolean showDescriptionHints() {
+		return showDescriptionHints;
 	}
 	
 	public Map<String, Integer> getMaxLevels() {
