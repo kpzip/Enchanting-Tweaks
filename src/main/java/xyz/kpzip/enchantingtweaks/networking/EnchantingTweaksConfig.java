@@ -105,7 +105,7 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 		this.allowRiptideAlways = readcfg.allowRiptideAlways();
 		
 		//Client Only Code
-		if (Thread.currentThread().getName().equals("RENDER")) {
+		if (Thread.currentThread().getName().equals("Render thread")) {
 			this.showDescriptionHints = readcfg.showDescriptionHints();
 		}
 		
