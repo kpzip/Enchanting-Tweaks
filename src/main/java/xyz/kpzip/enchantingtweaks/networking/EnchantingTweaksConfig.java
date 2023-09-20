@@ -208,7 +208,7 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	
 	//This method exists to clean up data entered by the user that could cause potentially unsafe operations
 	private static void validateExclusivity(Map<Set<String>, Boolean> exclusivity) {
-		for (Set<String> pair : exclusivity.keySet()) {
+		for (Set<String> pair : new HashMap<Set<String>, Boolean>(exclusivity).keySet()) {
 			
 			//Make sure each pair only contains 2 elements
 			if (pair.size() > 2) {
@@ -221,10 +221,10 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 				continue;
 			}
 			
-			pair.forEach(str -> {
+			/*pair.forEach(str -> {
 				pair.remove(str);
 				pair.add(str.toLowerCase());
-			});
+			});*/
 			
 			List<String> ids = Registries.ENCHANTMENT.stream().map(e -> EnchantmentHelper.getEnchantmentId(e).toString()).toList();
 			
@@ -240,7 +240,8 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	}
 	
 	private static void validateMaxLevels(Map<String, Integer> maxLevels) {
-		for (String str : maxLevels.keySet()) {
+		
+		for (String str : new HashMap<String, Integer>(maxLevels).keySet()) {
 			if (maxLevels.get(str) < 1) {
 				maxLevels.put(str, 1);
 			}
