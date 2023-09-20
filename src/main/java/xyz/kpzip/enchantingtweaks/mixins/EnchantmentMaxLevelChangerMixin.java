@@ -64,6 +64,7 @@ public final class EnchantmentMaxLevelChangerMixin {
 	@Mixin(value = ItemGroups.class, priority = MixinPriority.HIGH)
 	private static abstract class ItemGroupsMixin {
 		
+		//Top Teir Bytecode BS right here:
 		@Redirect(method = "method_48942", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
 		private static int getRealMaxLevel(Enchantment e) {
 			return EnchantmentTweaksHelper.getEnchantmentMaxLevel(e);
