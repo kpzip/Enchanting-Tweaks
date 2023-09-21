@@ -92,20 +92,29 @@ public final class EnchantmentTweaksHelper {
 	
 	private static List<Enchantment> getExclusiveEnchantments(Enchantment e) {
 		List<Enchantment> exclusives = new ArrayList<Enchantment>();
+		
+		//Loop through all pairs of enchantments
 		for (Set<String> enchantments : EnchantingTweaks.getConfig().getExclusivity().keySet()) {
+			
+			//only continue if the pair contains the target enchantment and the pair is exclusive
 			if (enchantments.contains(EnchantmentHelper.getEnchantmentId(e).toString()) && !EnchantingTweaks.getConfig().getExclusivity().get(enchantments)) {
+				
+				//loop through the pair of exclusive enchantments
 				for (String s : enchantments) {
+					
+					//continue if this enchantment is not the target enchantment
 					if (s.equals(EnchantmentHelper.getEnchantmentId(e).toString())) {
 						continue;
 					}
-					Enchantment exclusive = null;
+					
+					// we know s must be the name of an enchantment that is exclusive to e, but we must find it in the registry
 					for (Enchantment en : Registries.ENCHANTMENT) {
 						if (EnchantmentHelper.getEnchantmentId(en).toString().equals(s)) {
-							exclusive = en;
+							exclusives.add(en);
 							break;
 						}
 					}
-					exclusives.add(exclusive);
+					
 				}
 			}
 		}

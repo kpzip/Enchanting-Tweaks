@@ -2,9 +2,12 @@ package xyz.kpzip.enchantingtweaks.networking;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -27,6 +30,10 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	private boolean showAllLevelEnchantedBooksInCreativeInventory = true;
 	private boolean enchantmentCommandAbidesByMaxLevel = false;
 	private boolean allowRiptideAlways = false;
+	
+	//Client only
+	@Environment(EnvType.CLIENT)
+	private boolean showDescriptionHints = true;
 	
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());
 	private Map<Set<String>, Boolean> exclusivity = getExclusivity(new HashMap<Set<String>, Boolean>());
@@ -98,11 +105,19 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 		this.enchantmentCommandAbidesByMaxLevel = readcfg.enchantmentCommandAbidesByMaxLevel();
 		this.allowRiptideAlways = readcfg.allowRiptideAlways();
 		
+		//Client Only Code
+		if (Thread.currentThread().getName().equals("Render thread")) {
+			this.showDescriptionHints = readcfg.showDescriptionHints();
+		}
+		
 		this.maxLevels = readcfg.maxLevels;
-		//addAllEnchantments(this.maxLevels);
+		validateMaxLevels(this.maxLevels);
+		addAllEnchantments(this.maxLevels);
 		
 		this.exclusivity = readcfg.exclusivity;
-		//getExclusivity(this.exclusivity);
+		validateExclusivity(this.exclusivity);
+		getExclusivity(this.exclusivity);
+		
 		
 		return this;
 	}
@@ -126,6 +141,11 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	
 	public boolean allowRiptideAlways() {
 		return allowRiptideAlways;
+	}
+	
+	@Environment(EnvType.CLIENT)
+	public boolean showDescriptionHints() {
+		return showDescriptionHints;
 	}
 	
 	public Map<String, Integer> getMaxLevels() {
@@ -184,6 +204,59 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 		e.add(infMending);
 		
 		return e;
+	}
+	
+	//This method exists to clean up data entered by the user that could cause potentially unsafe operations
+	private static void validateExclusivity(Map<Set<String>, Boolean> exclusivity) {
+		for (Set<String> pair : new HashMap<Set<String>, Boolean>(exclusivity).keySet()) {
+			
+			//Make sure each pair only contains 2 elements
+			if (pair.size() > 2) {
+				//TODO in the future make this fix the pair by removing invalid ids so that the set has a size of 2
+				exclusivity.remove(pair);
+				continue;
+			}
+			else if (pair.size() < 2) {
+				exclusivity.remove(pair);
+				continue;
+			}
+			
+			/*pair.forEach(str -> {
+				pair.remove(str);
+				pair.add(str.toLowerCase());
+			});*/
+			
+			List<String> ids = Registries.ENCHANTMENT.stream().map(e -> EnchantmentHelper.getEnchantmentId(e).toString()).toList();
+			
+			for (String str : pair) {
+				if (!ids.contains(str)) {
+					exclusivity.remove(pair);
+					continue;
+				}
+			}
+			
+			
+		}
+	}
+	
+	private static void validateMaxLevels(Map<String, Integer> maxLevels) {
+		
+		for (String str : new HashMap<String, Integer>(maxLevels).keySet()) {
+			if (maxLevels.get(str) < 1) {
+				maxLevels.put(str, 1);
+			}
+			
+			int lvl = maxLevels.get(str);
+			
+			maxLevels.remove(str);
+			maxLevels.put(str.toLowerCase(), lvl);
+			
+			List<String> ids = Registries.ENCHANTMENT.stream().map(e -> EnchantmentHelper.getEnchantmentId(e).toString()).toList();
+			
+			if (!ids.contains(str)) {
+				maxLevels.remove(str);
+			}
+		}
 	}
 	
 

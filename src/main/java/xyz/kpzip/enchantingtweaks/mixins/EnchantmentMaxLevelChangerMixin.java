@@ -1,10 +1,6 @@
 package xyz.kpzip.enchantingtweaks.mixins;
 
-import java.util.Set;
-import java.util.stream.IntStream;
-
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,15 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
-import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.EnchantRandomlyLootFunction;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.EnchantCommand;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -75,40 +64,22 @@ public final class EnchantmentMaxLevelChangerMixin {
 	@Mixin(value = ItemGroups.class, priority = MixinPriority.HIGH)
 	private static abstract class ItemGroupsMixin {
 		
-		/**
-		 * @Author kpzip
-		 * @Reason allow the max level to be fetched from the enchanting tweaks config
-		 * TODO Overwrite: Maintain this for every update in case the original changes
-		 * */
-		@Overwrite
-		private static void addMaxLevelEnchantedBooks(ItemGroup.Entries entries, RegistryWrapper<Enchantment> registryWrapper, Set<EnchantmentTarget> enchantmentTargets, ItemGroup.StackVisibility visibility) {
-	        registryWrapper.streamEntries().map(RegistryEntry::value).filter(enchantment -> enchantmentTargets.contains((Object)enchantment.target))
-	        .map(enchantment -> EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry((Enchantment)enchantment, EnchantmentTweaksHelper.getEnchantmentMaxLevel(enchantment))))
-	        .forEach(stack -> entries.add((ItemStack)stack, visibility));
-	    }
-
-		/**
-		 * @Author kpzip
-		 * @Reason allow the max level to be fetched from the enchanting tweaks config and dont add all level enchanted books if the level is greater than 15
-		 * TODO Overwrite: Maintain this for every update in case the original changes
-		 * */
-		@Overwrite
-	    private static void addAllLevelEnchantedBooks(ItemGroup.Entries entries, RegistryWrapper<Enchantment> registryWrapper, Set<EnchantmentTarget> enchantmentTargets, ItemGroup.StackVisibility visibility) {
-	        if (EnchantingTweaks.getConfig().showAllLevelEnchantedBooksInCreativeInventory()) registryWrapper.streamEntries()
-	        .map(RegistryEntry::value).filter(enchantment -> enchantmentTargets.contains((Object)enchantment.target))
-	        .flatMap(enchantment -> getEnchantRange(enchantment)
-	        .mapToObj(level -> EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry((Enchantment)enchantment, level))))
-	        .forEach(stack -> entries.add((ItemStack)stack, visibility));
-	        else addMaxLevelEnchantedBooks(entries, registryWrapper, enchantmentTargets, visibility);
-	    }
-		
-		@Unique
-		private static IntStream getEnchantRange(Enchantment e) {
-			int maxLevel = EnchantmentTweaksHelper.getEnchantmentMaxLevel(e);
-			int minLevel = e.getMinLevel();
-			if (maxLevel > 15) return IntStream.rangeClosed(maxLevel, maxLevel);
-			return IntStream.rangeClosed(minLevel, maxLevel);
+		//Top Teir Bytecode BS right here:
+		@Redirect(method = "method_48942", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
+		private static int getRealMaxLevel(Enchantment e) {
+			return EnchantmentTweaksHelper.getEnchantmentMaxLevel(e);
 		}
+		
+		@Redirect(method = "method_48942", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMinLevel()I"))
+		private static int getMinLevelHack(Enchantment e) {
+			return EnchantmentTweaksHelper.getEnchantmentMaxLevel(e) > 15 ? EnchantmentTweaksHelper.getEnchantmentMaxLevel(e) : e.getMinLevel();
+		}
+		
+		@Redirect(method = "method_48949", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
+		private static int getRealMaxLevel2(Enchantment e) {
+			return EnchantmentTweaksHelper.getEnchantmentMaxLevel(e);
+		}
+		
 	}
 	
 	@Mixin(value = Enchantment.class, priority = MixinPriority.LOWEST)
