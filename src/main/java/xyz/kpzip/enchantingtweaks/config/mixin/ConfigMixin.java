@@ -44,13 +44,11 @@ public final class ConfigMixin {
 		
 		@Inject(method = "onPlayerConnect", at = @At("RETURN"))
 		public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
-			if (server.isDedicated()) {
-				PacketByteBuf buf;
-				for (SyncedConfig cfg : ConfigHandler.configs) {
-					buf = PacketByteBufs.create();
-					cfg.writeToPacket(buf);
-					ServerPlayNetworking.send(player, cfg.getSyncPacketIdentifier(), buf);
-				}
+			PacketByteBuf buf;
+			for (SyncedConfig cfg : ConfigHandler.configs) {
+				buf = PacketByteBufs.create();
+				cfg.writeToPacket(buf);
+				ServerPlayNetworking.send(player, cfg.getSyncPacketIdentifier(), buf);
 			}
 		}
 		

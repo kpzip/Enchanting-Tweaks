@@ -34,7 +34,7 @@ public final class AnvilMixin {
 		
 		@Redirect(method="drawForeground", at = @At(value = "FIELD", ordinal = 0,  target = "Lnet/minecraft/entity/player/PlayerAbilities;creativeMode:Z", opcode = Opcodes.GETFIELD))
 		private boolean shouldBeTooExpensive(PlayerAbilities playerAbilities) {
-			return !(!playerAbilities.creativeMode && !EnchantingTweaks.getConfig().allowBypassAnvilMaxLevel());
+			return playerAbilities.creativeMode || EnchantingTweaks.getConfig().allowBypassAnvilMaxLevel();
 		}
 
 	}
