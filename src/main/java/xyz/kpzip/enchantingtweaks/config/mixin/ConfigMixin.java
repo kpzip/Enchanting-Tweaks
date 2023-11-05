@@ -17,6 +17,7 @@ import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import xyz.kpzip.enchantingtweaks.config.ConfigHandler;
 import xyz.kpzip.enchantingtweaks.config.SyncedConfig;
@@ -43,7 +44,7 @@ public final class ConfigMixin {
 		@Shadow @Final private MinecraftServer server;
 		
 		@Inject(method = "onPlayerConnect", at = @At("RETURN"))
-		public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
+		public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData data, CallbackInfo ci) {
 			PacketByteBuf buf;
 			for (SyncedConfig cfg : ConfigHandler.configs) {
 				buf = PacketByteBufs.create();
