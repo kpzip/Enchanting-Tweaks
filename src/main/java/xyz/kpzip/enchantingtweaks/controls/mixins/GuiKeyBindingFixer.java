@@ -28,6 +28,11 @@ public final class GuiKeyBindingFixer {
 		
 		@Shadow private static final Map<InputUtil.Key, KeyBinding> KEY_TO_BINDINGS = Maps.newHashMap();
 		
+		/**
+		 * @Author kpzip
+		 * @Reason Stop non-conflicting bindings from being added to the map
+		 * TODO Overwrite: Maintain this for every update in case the original changes
+		 * */
 		@Overwrite
 		public static void updateKeysByCode() {
 	        KEY_TO_BINDINGS.clear();
