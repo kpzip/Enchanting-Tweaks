@@ -52,9 +52,5 @@ public final class Keybindings {
 	public static Text getExclusivityKeyName() {
 		return EXCLUSIVITY.getBoundKeyLocalizedText();
 	}
-	
-	public static void debug() {
-		System.out.println(DESCRIPTIONS.equals(APPLICABILITY));
-	}
 
 }

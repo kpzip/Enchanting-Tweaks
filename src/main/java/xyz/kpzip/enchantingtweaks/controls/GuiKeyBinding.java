@@ -19,7 +19,6 @@ public class GuiKeyBinding extends KeyBinding {
 	//Terrible, Awful Hack
 	@Override
 	public boolean isPressed() {
-		Keybindings.debug();
 		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), ((KeyBindingAccessor) this).fabric_getBoundKey().getCode());
 	}
 	
