@@ -27,7 +27,8 @@
   },
   "mixins": [
     "enchantingtweaks.mixins.json",
-    "cfg.mixins.json"
+    "cfg.mixins.json",
+    "controls.mixins.json"
   ],
   "accessWidener" : "enchantingtweaks.accesswidener",
 

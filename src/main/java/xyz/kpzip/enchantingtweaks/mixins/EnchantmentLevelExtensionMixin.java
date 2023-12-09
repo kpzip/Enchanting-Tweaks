@@ -154,12 +154,9 @@ public final class EnchantmentLevelExtensionMixin {
 	@Mixin(value = TridentEntity.class, priority = MixinPriority.LOWEST)
 	private static abstract class TridentEntityMixin extends PersistentProjectileEntity{
 		
-		protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, double x, double y, double z, World world) {
-			super(type, x, y, z, world);
+		protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, double x, double y, double z, World world, ItemStack stack) {
+			super(type, x, y, z, world, stack);
 		}
-		
-		@Shadow
-		private ItemStack tridentStack;
 		
 		@Inject(method = "onEntityHit(Lnet/minecraft/util/hit/EntityHitResult;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/TridentEntity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V", shift = Shift.AFTER), cancellable = true)
 		private void onEntityHit(EntityHitResult result, CallbackInfo ci) {
@@ -168,7 +165,7 @@ public final class EnchantmentLevelExtensionMixin {
 			SoundEvent soundEvent = SoundEvents.ITEM_TRIDENT_HIT;
 			float g = 1.0f;
 	        if (this.getWorld() instanceof ServerWorld && this.getWorld().isThundering() && ((TridentEntity)(Object)this).hasChanneling()) {
-	        	int channeling = EnchantmentHelper.getLevel(Enchantments.CHANNELING, tridentStack);
+	        	int channeling = EnchantmentHelper.getLevel(Enchantments.CHANNELING, this.getItemStack());
 	            LightningEntity lightningEntity;
 	            BlockPos blockPos = entity.getBlockPos();
 	            if (this.getWorld().isSkyVisible(blockPos) && (lightningEntity = EntityType.LIGHTNING_BOLT.create(this.getWorld())) != null) {

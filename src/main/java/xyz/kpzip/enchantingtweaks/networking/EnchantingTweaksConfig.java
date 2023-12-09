@@ -32,7 +32,6 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 	private boolean allowRiptideAlways = false;
 	
 	//Client only
-	@Environment(EnvType.CLIENT)
 	private boolean showDescriptionHints = true;
 	
 	private Map<String, Integer> maxLevels = addAllEnchantments(new HashMap<String, Integer>());

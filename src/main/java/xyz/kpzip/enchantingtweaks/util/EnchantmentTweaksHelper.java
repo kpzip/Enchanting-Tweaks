@@ -32,9 +32,9 @@ public final class EnchantmentTweaksHelper {
 	
 	private static final String ENCHANTMENT_DESCRIPTION_KEY = "enchantment.descriptions.";
 	
-	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden").formatted(Formatting.DARK_GRAY);
-	private static final Text ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden_advanced").formatted(Formatting.DARK_GRAY);
-	private static final Text ENCHANTMENT_EXCLUSIVITY_HIDDEN_TEXT = Text.translatable(ENCHANTMENT_DESCRIPTION_KEY + "hidden_exclusive").formatted(Formatting.DARK_GRAY);
+	private static final String ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT = ENCHANTMENT_DESCRIPTION_KEY + "hidden";
+	private static final String ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT = ENCHANTMENT_DESCRIPTION_KEY + "hidden_advanced";
+	private static final String ENCHANTMENT_EXCLUSIVITY_HIDDEN_TEXT = ENCHANTMENT_DESCRIPTION_KEY + "hidden_exclusive";
 	
 	private static final MutableText ENCHANTMENT_DESCRIPTION_PREFIX = Text.literal("  ").formatted(Formatting.DARK_GRAY);
 	
@@ -157,15 +157,15 @@ public final class EnchantmentTweaksHelper {
 		return lines;
 	}
 	
-	public static Text getHiddenDescriptionText() {
+	public static String getHiddenDescriptionText() {
 		return ENCHANTMENT_DESCRIPTION_HIDDEN_TEXT;
 	}
 	
-	public static Text getHiddenAdvancedDescriptionText() {
+	public static String getHiddenAdvancedDescriptionText() {
 		return ENCHANTMENT_DESCRIPTION_HIDDEN_ADVANCED_TEXT;
 	}
 	
-	public static Text getHiddenExclusivityText() {
+	public static String getHiddenExclusivityText() {
 		return ENCHANTMENT_EXCLUSIVITY_HIDDEN_TEXT;
 	}
 	

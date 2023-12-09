@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Unique;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
@@ -16,7 +15,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import xyz.kpzip.enchantingtweaks.EnchantingTweaks;
+import xyz.kpzip.enchantingtweaks.controls.Keybindings;
 import xyz.kpzip.enchantingtweaks.util.CustomApplicabilityTooltipProvider;
 import xyz.kpzip.enchantingtweaks.util.EnchantmentTweaksHelper;
 import xyz.kpzip.enchantingtweaks.util.MixinPriority;
@@ -47,26 +48,26 @@ public final class EnchantmentTooltipMixin {
 	            	int level = EnchantmentHelper.getLevelFromNbt(nbtCompound);
 	            	tooltip.add(e.getName(level));
 	            	hasEnchantments = true;
-	        		if (Screen.hasShiftDown()) {
+	        		if (Keybindings.isDescriptionsPressed()) {
 	        			tooltip.addAll(EnchantmentTweaksHelper.getDescription(e));
 	        		}
-	        		if (Screen.hasControlDown()) {
+	        		if (Keybindings.isApplicabilityPressed()) {
 	        			tooltip.addAll(EnchantmentTweaksHelper.getApplicableItemsText(e));
 	        		}
-	        		if (Screen.hasAltDown()) {
+	        		if (Keybindings.isExclusivityPressed()) {
 	        			tooltip.addAll(EnchantmentTweaksHelper.getExclusivityText(e));
 	        		}
 	        		
 	            });
 	        }
-	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Screen.hasShiftDown() && hasEnchantments) {
-	        	tooltip.add(EnchantmentTweaksHelper.getHiddenDescriptionText());
+	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Keybindings.isDescriptionsPressed() && hasEnchantments) {
+	        	tooltip.add(Text.translatable(EnchantmentTweaksHelper.getHiddenDescriptionText(), Keybindings.getDesciptionsKeyName()).formatted(Formatting.DARK_GRAY));
 	        }
-	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Screen.hasControlDown() && hasEnchantments && Screen.hasShiftDown()) {
-	        	tooltip.add(EnchantmentTweaksHelper.getHiddenAdvancedDescriptionText());
+	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Keybindings.isApplicabilityPressed() && hasEnchantments && Keybindings.isDescriptionsPressed()) {
+	        	tooltip.add(Text.translatable(EnchantmentTweaksHelper.getHiddenAdvancedDescriptionText(), Keybindings.getApplicabilityKeyName()).formatted(Formatting.DARK_GRAY));
 	        }
-	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Screen.hasAltDown() && hasEnchantments && Screen.hasShiftDown()) {
-	        	tooltip.add(EnchantmentTweaksHelper.getHiddenExclusivityText());
+	        if (EnchantingTweaks.getConfig().showDescriptionHints() && !Keybindings.isExclusivityPressed() && hasEnchantments && Keybindings.isDescriptionsPressed()) {
+	        	tooltip.add(Text.translatable(EnchantmentTweaksHelper.getHiddenExclusivityText(), Keybindings.getExclusivityKeyName()).formatted(Formatting.DARK_GRAY));
 	        }
 	    }
 	}

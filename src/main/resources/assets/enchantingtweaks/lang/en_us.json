@@ -1,7 +1,14 @@
 {
-	"enchantment.descriptions.hidden": "Press Shift to view enchantment descriptions",
-	"enchantment.descriptions.hidden_advanced": "Press Ctrl to view applicable items",
-	"enchantment.descriptions.hidden_exclusive": "Press Alt to view combination info",
+	"category.enchantingtweaks.controls": "Enchanting Tweaks Key Bindings",
+	
+	"key.enchantingtweaks.descriptions": "Show Enchantment Descriptions",
+	"key.enchantingtweaks.applicability": "Show Applicable Items",
+	"key.enchantingtweaks.exclusivity": "Show Enchantment Combination Info",
+	
+	
+	"enchantment.descriptions.hidden": "Press %1$s to view enchantment descriptions",
+	"enchantment.descriptions.hidden_advanced": "Press %1$s to view applicable items",
+	"enchantment.descriptions.hidden_exclusive": "Press %1$s to view combination info",
 	"enchantment.descriptions.applicable_to": "Applicable to:",
 	"enchantment.descriptions.exclusive_to": "Cannot be combined with:",
 	
