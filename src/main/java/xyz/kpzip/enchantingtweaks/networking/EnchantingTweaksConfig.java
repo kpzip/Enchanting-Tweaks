@@ -205,13 +205,13 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 		return e;
 	}
 	
-	//This method exists to clean up data entered by the user that could cause potentially unsafe operations
+	//This method exists to clean up data entered by the user that could cause potential crashes
 	private static void validateExclusivity(Map<Set<String>, Boolean> exclusivity) {
 		for (Set<String> pair : new HashMap<Set<String>, Boolean>(exclusivity).keySet()) {
 			
 			//Make sure each pair only contains 2 elements
 			if (pair.size() > 2) {
-				//TODO in the future make this fix the pair by removing invalid ids so that the set has a size of 2
+				
 				exclusivity.remove(pair);
 				continue;
 			}
@@ -219,11 +219,6 @@ public class EnchantingTweaksConfig implements SyncedConfig, ConfigWithReadme {
 				exclusivity.remove(pair);
 				continue;
 			}
-			
-			/*pair.forEach(str -> {
-				pair.remove(str);
-				pair.add(str.toLowerCase());
-			});*/
 			
 			List<String> ids = Registries.ENCHANTMENT.stream().map(e -> EnchantmentHelper.getEnchantmentId(e).toString()).toList();
 			
