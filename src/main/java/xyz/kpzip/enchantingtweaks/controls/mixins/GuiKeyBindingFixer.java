@@ -21,7 +21,7 @@ public final class GuiKeyBindingFixer {
 
 	private GuiKeyBindingFixer() {}
 	
-	@Mixin(value = KeyBinding.class, priority = MixinPriority.HIGHEST)
+	@Mixin(value = KeyBinding.class, priority = MixinPriority.LOWEST)
 	private static abstract class KeyBindingMixin {
 		
 		@Shadow private static final Map<String, KeyBinding> KEYS_BY_ID = Maps.newHashMap();
