@@ -72,7 +72,8 @@ public final class EnchantmentMaxLevelChangerMixin {
 		
 		@Redirect(method = "method_48942", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMinLevel()I"))
 		private static int getMinLevelHack(Enchantment e) {
-			return EnchantmentTweaksHelper.getEnchantmentMaxLevel(e) > 15 ? EnchantmentTweaksHelper.getEnchantmentMaxLevel(e) : e.getMinLevel();
+			int m = EnchantmentTweaksHelper.getEnchantmentMaxLevel(e);
+			return m > 15 || m == 0 ? EnchantmentTweaksHelper.getEnchantmentMaxLevel(e) : e.getMinLevel();
 		}
 		
 		@Redirect(method = "method_48949", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))

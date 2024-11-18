@@ -46,7 +46,7 @@ public final class EnchantmentTweaksHelper {
 	public static int getEnchantmentMaxLevel(Enchantment e) {
 		for (String s : EnchantingTweaks.getConfig().getMaxLevels().keySet()) {
 			if (s.equals(EnchantmentHelper.getEnchantmentId(e).toString())) {
-				return EnchantingTweaks.getConfig().getMaxLevels().get(s) < 1 ? Integer.MAX_VALUE : EnchantingTweaks.getConfig().getMaxLevels().get(s);
+				return EnchantingTweaks.getConfig().getMaxLevels().get(s) < 0 ? Integer.MAX_VALUE : EnchantingTweaks.getConfig().getMaxLevels().get(s);
 			}
 		}
 		return e.getMaxLevel();
